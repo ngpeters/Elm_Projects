@@ -1,3 +1,8 @@
+--This code has 4 circles that fall from the top of the page
+--It cycles through with a Tangent function so that it always has
+--circles falling.
+
+
 --Html to start the main off and initiazlize everything
 import Html exposing (Html)
 --Svg and Svg.Attributes are used for the animation
