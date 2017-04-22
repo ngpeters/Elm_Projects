@@ -1,6 +1,9 @@
+--Html to start the main off and initiazlize everything
 import Html exposing (Html)
+--Svg and Svg.Attributes are used for the animation
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+--The use of time here was not great, it makes everything jolt when it runs
 import Time exposing (Time, second)
 
 
@@ -20,7 +23,7 @@ main =
 
 type alias Model = Time
 
-
+--init with 0 and no commands (0, Cmd.none)
 init : (Model, Cmd Msg)
 init =
   (0, Cmd.none)
@@ -44,7 +47,6 @@ update msg model =
 
 -- SUBSCRIPTIONS
 
-
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Time.every second Tick
@@ -53,6 +55,9 @@ subscriptions model =
 
 -- VIEW
 
+--I wanted things falling from the page and
+--they do. I am not yet sure if having them fall
+--faster at the end is what I will end up with though.
 
 view : Model -> Html Msg
 view model =
