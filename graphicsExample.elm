@@ -14,8 +14,8 @@ main = program
   update = updateWithCommand
   }
 
-initialModel = {  x = 0, vx = 0,
-                  y = 0, vy = 0 }
+initialModel = {  x = 0,
+                  y = 0}
 
 subscriptions model = 
   Sub.batch 
@@ -28,21 +28,21 @@ updateWithCommand msg model =
 
 update msg model = 
   case msg of
-    Begin -> (model, Cmd.none)
-    Tick time -> (tick model, Cmd.none)
+    Begin -> model
+    Tick time -> tick model
 
 tick model =
   model
       |>fall
 
 fall model = 
-  { model | vy = model.vy - 0.4}
+  { model | y = model.y - 0.4}
 
-drawCanvas = --put model
+drawCanvas model =
   [ circleMaker "Hello"
-      |> move (300, 100)
+      |> move (100, model.y)
   , circleMaker "Goodbye" 
-      |> move (50, 70)]
+      |> move (50, model.y)]
     |> collage 500 500
     |> toHtml
 
@@ -56,6 +56,6 @@ circleMaker kanji =
 view model =
   div []
     [ button [ onClick Begin ] [ Html.text "Begin" ]
-    , drawCanvas]
+    , drawCanvas model]
 
 
