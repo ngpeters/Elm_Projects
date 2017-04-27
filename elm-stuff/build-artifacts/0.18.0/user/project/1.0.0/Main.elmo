@@ -41,36 +41,143 @@ var _user$project$Main$drawCanvas = function (model) {
 					_0: _user$project$Main$backDropBox(_elm_lang$core$Color$blue),
 					_1: {ctor: '[]'}
 				},
-				A2(_elm_lang$core$List$map, _user$project$Main$drawCircle, model))));
+				A2(_elm_lang$core$List$map, _user$project$Main$drawCircle, model.droplist))));
 };
-var _user$project$Main$fall = function (model) {
+var _user$project$Main$fall = function (drop) {
+	return _elm_lang$core$Native_Utils.update(
+		drop,
+		{y: drop.y - 0.4});
+};
+var _user$project$Main$updateDrops = function (model) {
 	return _elm_lang$core$Native_Utils.update(
 		model,
-		{y: model.y - 0.4});
+		{
+			droplist: A2(_elm_lang$core$List$map, _user$project$Main$fall, model.droplist)
+		});
 };
-var _user$project$Main$tick = function (model) {
-	return A2(_elm_lang$core$List$map, _user$project$Main$fall, model);
+var _user$project$Main$colors = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: A3(
+			_elm_lang$core$Color$hsl,
+			_elm_lang$core$Basics$degrees(190),
+			0.77,
+			0.5),
+		_1: {
+			ctor: '::',
+			_0: A3(
+				_elm_lang$core$Color$hsl,
+				_elm_lang$core$Basics$degrees(121),
+				0.74,
+				0.5),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_elm_lang$core$Color$hsl,
+					_elm_lang$core$Basics$degrees(41),
+					0.9,
+					0.5),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_elm_lang$core$Color$hsl,
+						_elm_lang$core$Basics$degrees(16),
+						0.82,
+						0.5),
+					_1: {
+						ctor: '::',
+						_0: A3(
+							_elm_lang$core$Color$hsl,
+							_elm_lang$core$Basics$degrees(317),
+							0.49,
+							0.5),
+						_1: {
+							ctor: '::',
+							_0: A3(
+								_elm_lang$core$Color$hsl,
+								_elm_lang$core$Basics$degrees(285),
+								0.57,
+								0.5),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
+var _user$project$Main$getColor = function (position) {
+	var _p0 = A2(_elm_lang$core$Array$get, position, _user$project$Main$colors);
+	if (_p0.ctor === 'Just') {
+		return _p0._0;
+	} else {
+		return _elm_lang$core$Color$red;
+	}
 };
-var _user$project$Main$getColor = _elm_lang$core$Color$red;
-var _user$project$Main$getName = 'hi';
+var _user$project$Main$names = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: 'a',
+		_1: {
+			ctor: '::',
+			_0: 'b',
+			_1: {
+				ctor: '::',
+				_0: 'c',
+				_1: {
+					ctor: '::',
+					_0: 'd',
+					_1: {
+						ctor: '::',
+						_0: 'e',
+						_1: {
+							ctor: '::',
+							_0: 'f',
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
+var _user$project$Main$getName = function (position) {
+	var _p1 = A2(_elm_lang$core$Array$get, position, _user$project$Main$names);
+	if (_p1.ctor === 'Just') {
+		return _p1._0;
+	} else {
+		return 'No';
+	}
+};
 var _user$project$Main$creatMoreCircles = F3(
 	function (numC, xOffset, model) {
 		creatMoreCircles:
 		while (true) {
-			var _p0 = numC;
-			if (_p0 === 0) {
+			var _p2 = numC;
+			if (_p2 === 0) {
 				return model;
 			} else {
-				var _v1 = numC - 1,
-					_v2 = xOffset + 100,
-					_v3 = {
-					ctor: '::',
-					_0: {x: xOffset, y: 300, name: _user$project$Main$getName, dropColor: _user$project$Main$getColor},
-					_1: model
-				};
-				numC = _v1;
-				xOffset = _v2;
-				model = _v3;
+				var _v3 = numC - 1,
+					_v4 = xOffset + 100,
+					_v5 = _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						droplist: {
+							ctor: '::',
+							_0: {
+								x: xOffset,
+								y: 300,
+								name: _user$project$Main$getName(model.position),
+								dropColor: _user$project$Main$getColor(model.position)
+							},
+							_1: model.droplist
+						},
+						position: A2(
+							_elm_lang$core$Basics_ops['%'],
+							model.position + 1,
+							_elm_lang$core$Array$length(_user$project$Main$names))
+					});
+				numC = _v3;
+				xOffset = _v4;
+				model = _v5;
 				continue creatMoreCircles;
 			}
 		}
@@ -78,10 +185,30 @@ var _user$project$Main$creatMoreCircles = F3(
 var _user$project$Main$createCircle = function (model) {
 	return A3(_user$project$Main$creatMoreCircles, 5, -200, model);
 };
+var _user$project$Main$addCircles = function (model) {
+	return A3(_user$project$Main$creatMoreCircles, 5, -200, model);
+};
+var _user$project$Main$updateTime = function (model) {
+	var _p3 = model.time;
+	if (_p3 === 300) {
+		return _user$project$Main$addCircles(
+			_elm_lang$core$Native_Utils.update(
+				model,
+				{time: 0}));
+	} else {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{time: model.time + 1});
+	}
+};
+var _user$project$Main$tick = function (model) {
+	return _user$project$Main$updateTime(
+		_user$project$Main$updateDrops(model));
+};
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p1 = msg;
-		if (_p1.ctor === 'Begin') {
+		var _p4 = msg;
+		if (_p4.ctor === 'Begin') {
 			return _user$project$Main$createCircle(model);
 		} else {
 			return _user$project$Main$tick(model);
@@ -95,32 +222,11 @@ var _user$project$Main$updateWithCommand = F2(
 			_1: _elm_lang$core$Platform_Cmd$none
 		};
 	});
-var _user$project$Main$names = {
-	ctor: '::',
-	_0: 'a',
-	_1: {
-		ctor: '::',
-		_0: 'b',
-		_1: {
-			ctor: '::',
-			_0: 'c',
-			_1: {
-				ctor: '::',
-				_0: 'd',
-				_1: {
-					ctor: '::',
-					_0: 'e',
-					_1: {
-						ctor: '::',
-						_0: 'f',
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		}
-	}
+var _user$project$Main$initialModel = {
+	droplist: {ctor: '[]'},
+	time: 0,
+	position: 0
 };
-var _user$project$Main$initialModel = {ctor: '[]'};
 var _user$project$Main$Drop = F4(
 	function (a, b, c, d) {
 		return {x: a, y: b, name: c, dropColor: d};
