@@ -1,3 +1,4 @@
+--elm-make graphicsExample.elm --output=index.html
 import Color exposing (..)
 import Collage exposing (..)
 import Element exposing (..)
@@ -15,7 +16,7 @@ main = program
   }
 
 initialModel = {  x = 0,
-                  y = 0}
+                  y = 300}
 
 subscriptions model = 
   Sub.batch 
@@ -39,12 +40,23 @@ fall model =
   { model | y = model.y - 0.4}
 
 drawCanvas model =
-  [ circleMaker "Hello"
-      |> move (100, model.y)
-  , circleMaker "Goodbye" 
-      |> move (50, model.y)]
+  [ backDropBox blue
+    , circleMaker "Hello"
+        |> move (-200, model.y)
+    , circleMaker "Goodbye" 
+        |> move (-100, model.y)
+    , circleMaker "And"
+        |> move (0, model.y)
+    , circleMaker "A"
+        |> move (100, model.y)
+    , circleMaker "Hi"
+        |> move (200, model.y)]
     |> collage 500 500
     |> toHtml
+
+backDropBox color =
+    group [ square 500
+            |> filled  color ]
 
 circleMaker kanji = 
   group [ circle 30
@@ -56,6 +68,6 @@ circleMaker kanji =
 view model =
   div []
     [ button [ onClick Begin ] [ Html.text "Begin" ]
-    , drawCanvas model]
+    , drawCanvas model ]
 
 
