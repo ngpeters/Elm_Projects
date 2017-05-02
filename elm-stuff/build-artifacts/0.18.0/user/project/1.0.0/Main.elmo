@@ -5,7 +5,7 @@ var _user$project$Main$backDropBox = function (color) {
 			_0: A2(
 				_evancz$elm_graphics$Collage$filled,
 				color,
-				_evancz$elm_graphics$Collage$square(500)),
+				_evancz$elm_graphics$Collage$square(600)),
 			_1: {ctor: '[]'}
 		});
 };
@@ -28,18 +28,41 @@ var _user$project$Main$drawCircle = function (model) {
 				}
 			}));
 };
+var _user$project$Main$drawSingleCircle = function (model) {
+	return A2(
+		_evancz$elm_graphics$Collage$move,
+		{ctor: '_Tuple2', _0: 305, _1: 270},
+		_evancz$elm_graphics$Collage$group(
+			{
+				ctor: '::',
+				_0: A2(
+					_evancz$elm_graphics$Collage$filled,
+					_elm_lang$core$Color$orange,
+					_evancz$elm_graphics$Collage$circle(30)),
+				_1: {
+					ctor: '::',
+					_0: _evancz$elm_graphics$Collage$text(
+						_evancz$elm_graphics$Text$fromString('name')),
+					_1: {ctor: '[]'}
+				}
+			}));
+};
 var _user$project$Main$drawCanvas = function (model) {
 	return _evancz$elm_graphics$Element$toHtml(
 		A3(
 			_evancz$elm_graphics$Collage$collage,
-			500,
-			500,
+			700,
+			600,
 			A2(
 				_elm_lang$core$List$append,
 				{
 					ctor: '::',
 					_0: _user$project$Main$backDropBox(_elm_lang$core$Color$blue),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$drawSingleCircle(model),
+						_1: {ctor: '[]'}
+					}
 				},
 				A2(_elm_lang$core$List$map, _user$project$Main$drawCircle, model.droplist))));
 };
@@ -88,9 +111,9 @@ var _user$project$Main$colors = _elm_lang$core$Array$fromList(
 						ctor: '::',
 						_0: A3(
 							_elm_lang$core$Color$hsl,
-							_elm_lang$core$Basics$degrees(317),
-							0.49,
-							0.5),
+							_elm_lang$core$Basics$degrees(337),
+							0.88,
+							0.77),
 						_1: {
 							ctor: '::',
 							_0: A3(
@@ -105,8 +128,8 @@ var _user$project$Main$colors = _elm_lang$core$Array$fromList(
 			}
 		}
 	});
-var _user$project$Main$getColor = function (position) {
-	var _p0 = A2(_elm_lang$core$Array$get, position, _user$project$Main$colors);
+var _user$project$Main$getColor = function (i) {
+	var _p0 = A2(_elm_lang$core$Array$get, i, _user$project$Main$colors);
 	if (_p0.ctor === 'Just') {
 		return _p0._0;
 	} else {
@@ -116,22 +139,22 @@ var _user$project$Main$getColor = function (position) {
 var _user$project$Main$names = _elm_lang$core$Array$fromList(
 	{
 		ctor: '::',
-		_0: 'a',
+		_0: 'blue',
 		_1: {
 			ctor: '::',
-			_0: 'b',
+			_0: 'green',
 			_1: {
 				ctor: '::',
-				_0: 'c',
+				_0: 'orange',
 				_1: {
 					ctor: '::',
-					_0: 'd',
+					_0: 'red',
 					_1: {
 						ctor: '::',
-						_0: 'e',
+						_0: 'pink',
 						_1: {
 							ctor: '::',
-							_0: 'f',
+							_0: 'purple',
 							_1: {ctor: '[]'}
 						}
 					}
@@ -147,6 +170,12 @@ var _user$project$Main$getName = function (position) {
 		return 'No';
 	}
 };
+var _user$project$Main$getName2 = function (i) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		'',
+		A2(_elm_lang$core$Array$get, i, _user$project$Main$names));
+};
 var _user$project$Main$creatMoreCircles = F3(
 	function (numC, xOffset, model) {
 		creatMoreCircles:
@@ -155,25 +184,28 @@ var _user$project$Main$creatMoreCircles = F3(
 			if (_p2 === 0) {
 				return model;
 			} else {
+				var _p3 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$int, 0, 5),
+					model.seed);
+				var randomValue = _p3._0;
+				var newSeed = _p3._1;
 				var _v3 = numC - 1,
 					_v4 = xOffset + 100,
 					_v5 = _elm_lang$core$Native_Utils.update(
 					model,
 					{
+						seed: newSeed,
 						droplist: {
 							ctor: '::',
 							_0: {
 								x: xOffset,
-								y: 300,
-								name: _user$project$Main$getName(model.position),
-								dropColor: _user$project$Main$getColor(model.position)
+								y: 350,
+								name: _user$project$Main$getName2(randomValue),
+								dropColor: _user$project$Main$getColor(randomValue)
 							},
 							_1: model.droplist
-						},
-						position: A2(
-							_elm_lang$core$Basics_ops['%'],
-							model.position + 1,
-							_elm_lang$core$Array$length(_user$project$Main$names))
+						}
 					});
 				numC = _v3;
 				xOffset = _v4;
@@ -189,8 +221,8 @@ var _user$project$Main$addCircles = function (model) {
 	return A3(_user$project$Main$creatMoreCircles, 5, -200, model);
 };
 var _user$project$Main$updateTime = function (model) {
-	var _p3 = model.time;
-	if (_p3 === 300) {
+	var _p4 = model.time;
+	if (_p4 === 300) {
 		return _user$project$Main$addCircles(
 			_elm_lang$core$Native_Utils.update(
 				model,
@@ -207,11 +239,18 @@ var _user$project$Main$tick = function (model) {
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p4 = msg;
-		if (_p4.ctor === 'Begin') {
-			return _user$project$Main$createCircle(model);
-		} else {
-			return _user$project$Main$tick(model);
+		var _p5 = msg;
+		switch (_p5.ctor) {
+			case 'Begin':
+				return _user$project$Main$createCircle(model);
+			case 'Tick':
+				return _user$project$Main$tick(model);
+			default:
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						seed: _elm_lang$core$Random$initialSeed(_p5._0)
+					});
 		}
 	});
 var _user$project$Main$updateWithCommand = F2(
@@ -222,15 +261,50 @@ var _user$project$Main$updateWithCommand = F2(
 			_1: _elm_lang$core$Platform_Cmd$none
 		};
 	});
+var _user$project$Main$names1 = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: '青',
+		_1: {
+			ctor: '::',
+			_0: '緑',
+			_1: {
+				ctor: '::',
+				_0: 'オレンジ',
+				_1: {
+					ctor: '::',
+					_0: '赤',
+					_1: {
+						ctor: '::',
+						_0: 'ピーンク',
+						_1: {
+							ctor: '::',
+							_0: '紫',
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
 var _user$project$Main$initialModel = {
 	droplist: {ctor: '[]'},
 	time: 0,
-	position: 0
+	position: 0,
+	seed: _elm_lang$core$Random$initialSeed(0),
+	singleCircle: {ctor: '[]'}
 };
 var _user$project$Main$Drop = F4(
 	function (a, b, c, d) {
 		return {x: a, y: b, name: c, dropColor: d};
 	});
+var _user$project$Main$InitialSeed = function (a) {
+	return {ctor: 'InitialSeed', _0: a};
+};
+var _user$project$Main$generateInitialSeed = A2(
+	_elm_lang$core$Random$generate,
+	_user$project$Main$InitialSeed,
+	A2(_elm_lang$core$Random$int, _elm_lang$core$Random$minInt, _elm_lang$core$Random$maxInt));
 var _user$project$Main$Tick = function (a) {
 	return {ctor: 'Tick', _0: a};
 };
@@ -270,7 +344,7 @@ var _user$project$Main$view = function (model) {
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{
-		init: {ctor: '_Tuple2', _0: _user$project$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none},
+		init: {ctor: '_Tuple2', _0: _user$project$Main$initialModel, _1: _user$project$Main$generateInitialSeed},
 		view: _user$project$Main$view,
 		subscriptions: _user$project$Main$subscriptions,
 		update: _user$project$Main$updateWithCommand

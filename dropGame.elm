@@ -1,6 +1,6 @@
 -- 341 Final Project with Elm --
 -- Natalie Peters
--- 
+-- Random falling droplets of color
 --
 import Color exposing (..)
 import Collage exposing (..)
@@ -11,27 +11,31 @@ import Html.Events exposing (onClick)
 import Time exposing (..)
 import AnimationFrame
 import Array
+import Random
 
 main = program
-  { init = (initialModel, Cmd.none),
+  { init = (initialModel, generateInitialSeed),
   view = view,
   subscriptions = subscriptions,
   update = updateWithCommand
   }
 
-initialModel = { droplist = [ ]
-               , time = 0
-               , position = 0 }
+generateInitialSeed = Random.generate InitialSeed (Random.int Random.minInt Random.maxInt)
 
-names = Array.fromList ["a", "b", "c", "d", "e", "f"]
+initialModel = { droplist = []
+               , time = 0
+               , position = 0 
+               , seed = Random.initialSeed 0
+               , singleCircle = [] }
+
+names1 = Array.fromList ["青", "緑", "オレンジ", "赤", "ピーンク", "紫"]
+names = Array.fromList ["blue", "green", "orange", "red", "pink", "purple"]
 colors = Array.fromList [ (hsl (degrees 190) 0.77 0.5)
                         , (hsl (degrees 121) 0.74 0.5)
                         , (hsl (degrees 41) 0.90 0.5)
                         , (hsl (degrees 16) 0.82 0.5)
-                        , (hsl (degrees 317) 0.49 0.5)
+                        , (hsl (degrees 337) 0.88 0.77)
                         , (hsl (degrees 285) 0.57 0.5)]
-
---randomListNumer = Int
 
 type alias Drop = { x : Int
                   , y : Int 
@@ -42,7 +46,7 @@ subscriptions model =
   Sub.batch 
   [ AnimationFrame.diffs Tick ]
 
-type Msg = Begin | Tick Time
+type Msg = Begin | Tick Time | InitialSeed Int 
 
 updateWithCommand msg model =
     (update msg model, Cmd.none)
@@ -51,6 +55,7 @@ update msg model =
   case msg of
     Begin -> createCircle model
     Tick _ -> tick model
+    InitialSeed val -> { model | seed = Random.initialSeed val }
 
 createCircle model = 
     creatMoreCircles 5 -200 model
@@ -58,14 +63,15 @@ createCircle model =
 creatMoreCircles numC xOffset model =
     case numC of 
         0 -> model
-        _ -> creatMoreCircles 
-                (numC - 1 ) 
-                (xOffset + 100)  
-                { model | droplist = ({ x = xOffset
-                                    , y = 300
-                                    , name = getName model.position
-                                    , dropColor = getColor model.position } :: model.droplist)
-                , position = (model.position + 1)% Array.length names}
+        _ -> let (randomValue, newSeed) = Random.step (Random.int 0 5) model.seed in     
+                creatMoreCircles 
+                    (numC - 1 ) 
+                    (xOffset + 100)  
+                    { model | seed = newSeed
+                        , droplist = ({ x = xOffset
+                                        , y = 350
+                                        , name = getName2 randomValue
+                                        , dropColor = getColor randomValue } :: model.droplist) }
 
 
 getName position =
@@ -73,10 +79,13 @@ getName position =
         Just s -> s
         _ -> "No"
 
-getColor position =
-    case Array.get position colors of
+getName2 i = Maybe.withDefault "" (Array.get i names)
+
+getColor i =
+    case Array.get i colors of
         Just s -> s
         _ -> red
+
 
 tick model =
     model
@@ -98,9 +107,17 @@ addCircles model =
     creatMoreCircles 5 -200 model
 
 drawCanvas model =
-  List.append [ backDropBox blue ] (List.map drawCircle model.droplist)
-    |> collage 500 500
+  List.append [ backDropBox blue, drawSingleCircle model ] (List.map drawCircle model.droplist)
+    |> collage 700 600
     |> toHtml
+
+drawSingleCircle model =
+    group [ circle 30
+                |> filled orange
+            , "name"
+                |> fromString
+                |> Collage.text]
+                |> move (305, 270)
 
 drawCircle model =
     group [ circle 30
@@ -111,7 +128,7 @@ drawCircle model =
             |> move (model.x, model.y)
 
 backDropBox color =
-    group [ square 500
+    group [ square 600
             |> filled color]
 
 view model =
