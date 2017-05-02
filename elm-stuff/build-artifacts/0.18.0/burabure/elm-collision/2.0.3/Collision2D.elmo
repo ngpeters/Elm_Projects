@@ -1,0 +1,65 @@
+var _burabure$elm_collision$Collision2D$circleToCircle = F2(
+	function (_p1, _p0) {
+		var _p2 = _p1;
+		var _p5 = _p2._0;
+		var _p3 = _p0;
+		var _p4 = _p3._0;
+		var dy = _p5.cy - _p4.cy;
+		var dx = _p5.cx - _p4.cx;
+		var distance = _elm_lang$core$Basics$sqrt((dx * dx) + (dy * dy));
+		return (_elm_lang$core$Native_Utils.cmp(distance, _p5.radius + _p4.radius) < 0) ? true : false;
+	});
+var _burabure$elm_collision$Collision2D$axisAlignedBoundingBox = F2(
+	function (_p7, _p6) {
+		var _p8 = _p7;
+		var _p11 = _p8._0;
+		var _p9 = _p6;
+		var _p10 = _p9._0;
+		var startingPoint = F2(
+			function (centerPoint, length) {
+				return centerPoint - (length / 2);
+			});
+		var x1 = A2(startingPoint, _p11.cx, _p11.w);
+		var x2 = A2(startingPoint, _p10.cx, _p10.w);
+		var y1 = A2(startingPoint, _p11.cy, _p11.h);
+		var y2 = A2(startingPoint, _p10.cy, _p10.h);
+		return ((_elm_lang$core$Native_Utils.cmp(x1, x2 + _p10.w) < 0) && ((_elm_lang$core$Native_Utils.cmp(x1 + _p11.w, x2) > 0) && ((_elm_lang$core$Native_Utils.cmp(y1, y2 + _p10.h) < 0) && (_elm_lang$core$Native_Utils.cmp(_p11.h + y1, y2) > 0)))) ? true : false;
+	});
+var _burabure$elm_collision$Collision2D$Rectangle = function (a) {
+	return {ctor: 'Rectangle', _0: a};
+};
+var _burabure$elm_collision$Collision2D$rectangle = F4(
+	function (centerX, centerY, width, height) {
+		return _burabure$elm_collision$Collision2D$Rectangle(
+			{cx: centerX, cy: centerY, w: width, h: height});
+	});
+var _burabure$elm_collision$Collision2D$Circle = function (a) {
+	return {ctor: 'Circle', _0: a};
+};
+var _burabure$elm_collision$Collision2D$circle = F3(
+	function (centerX, centerY, radius) {
+		return _burabure$elm_collision$Collision2D$Circle(
+			{cx: centerX, cy: centerY, radius: radius});
+	});
+var _burabure$elm_collision$Collision2D$Left = {ctor: 'Left'};
+var _burabure$elm_collision$Collision2D$Bottom = {ctor: 'Bottom'};
+var _burabure$elm_collision$Collision2D$Right = {ctor: 'Right'};
+var _burabure$elm_collision$Collision2D$Top = {ctor: 'Top'};
+var _burabure$elm_collision$Collision2D$rectangleSide = F2(
+	function (_p13, _p12) {
+		var _p14 = _p13;
+		var _p17 = _p14._0;
+		var _p15 = _p12;
+		var _p16 = _p15._0;
+		var dy = _p16.cy - _p17.cy;
+		var dx = _p16.cx - _p17.cx;
+		var h = 0.5 * (_p17.h + _p16.h);
+		var hx = h * dx;
+		var w = 0.5 * (_p17.w + _p16.w);
+		var wy = w * dy;
+		return ((_elm_lang$core$Native_Utils.cmp(
+			_elm_lang$core$Basics$abs(dx),
+			w) < 1) && (_elm_lang$core$Native_Utils.cmp(
+			_elm_lang$core$Basics$abs(dy),
+			h) < 1)) ? ((_elm_lang$core$Native_Utils.cmp(wy, hx) > 0) ? ((_elm_lang$core$Native_Utils.cmp(wy, 0 - hx) > 0) ? _elm_lang$core$Maybe$Just(_burabure$elm_collision$Collision2D$Top) : _elm_lang$core$Maybe$Just(_burabure$elm_collision$Collision2D$Left)) : ((_elm_lang$core$Native_Utils.cmp(wy, 0 - hx) > 0) ? _elm_lang$core$Maybe$Just(_burabure$elm_collision$Collision2D$Right) : _elm_lang$core$Maybe$Just(_burabure$elm_collision$Collision2D$Bottom))) : _elm_lang$core$Maybe$Nothing;
+	});

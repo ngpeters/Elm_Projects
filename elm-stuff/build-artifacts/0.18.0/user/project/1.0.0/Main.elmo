@@ -28,25 +28,6 @@ var _user$project$Main$drawCircle = function (model) {
 				}
 			}));
 };
-var _user$project$Main$drawSingleCircle = function (model) {
-	return A2(
-		_evancz$elm_graphics$Collage$move,
-		{ctor: '_Tuple2', _0: 305, _1: 270},
-		_evancz$elm_graphics$Collage$group(
-			{
-				ctor: '::',
-				_0: A2(
-					_evancz$elm_graphics$Collage$filled,
-					_elm_lang$core$Color$orange,
-					_evancz$elm_graphics$Collage$circle(30)),
-				_1: {
-					ctor: '::',
-					_0: _evancz$elm_graphics$Collage$text(
-						_evancz$elm_graphics$Text$fromString('name')),
-					_1: {ctor: '[]'}
-				}
-			}));
-};
 var _user$project$Main$drawCanvas = function (model) {
 	return _evancz$elm_graphics$Element$toHtml(
 		A3(
@@ -58,11 +39,7 @@ var _user$project$Main$drawCanvas = function (model) {
 				{
 					ctor: '::',
 					_0: _user$project$Main$backDropBox(_elm_lang$core$Color$blue),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$drawSingleCircle(model),
-						_1: {ctor: '[]'}
-					}
+					_1: {ctor: '[]'}
 				},
 				A2(_elm_lang$core$List$map, _user$project$Main$drawCircle, model.droplist))));
 };
@@ -233,14 +210,67 @@ var _user$project$Main$updateTime = function (model) {
 			{time: model.time + 1});
 	}
 };
+var _user$project$Main$drawSingleCircle = F2(
+	function (num, model) {
+		drawSingleCircle:
+		while (true) {
+			var _p5 = num;
+			if (_p5 === 0) {
+				return model;
+			} else {
+				var _p6 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$int, 0, 5),
+					model.seed);
+				var randomValue = _p6._0;
+				var newSeed = _p6._1;
+				var _v8 = num - 1,
+					_v9 = _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						seed: newSeed,
+						singleCircle: {
+							ctor: '::',
+							_0: {
+								x: 305,
+								y: 270,
+								name: _user$project$Main$getName2(randomValue),
+								dropColor: _user$project$Main$getColor(randomValue)
+							},
+							_1: model.singleCircle
+						}
+					});
+				num = _v8;
+				model = _v9;
+				continue drawSingleCircle;
+			}
+		}
+	});
+var _user$project$Main$drawSingleCircleHelper = function (model) {
+	return A2(_user$project$Main$drawSingleCircle, 1, model);
+};
+var _user$project$Main$updateSingleCircle = function (model) {
+	var _p7 = model.singleCircleTime;
+	if (_p7 === 800) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{singleCircleTime: 0});
+	} else {
+		return _user$project$Main$drawSingleCircleHelper(
+			_elm_lang$core$Native_Utils.update(
+				model,
+				{singleCircleTime: model.singleCircleTime + 1}));
+	}
+};
 var _user$project$Main$tick = function (model) {
 	return _user$project$Main$updateTime(
-		_user$project$Main$updateDrops(model));
+		_user$project$Main$updateDrops(
+			_user$project$Main$updateSingleCircle(model)));
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p5 = msg;
-		switch (_p5.ctor) {
+		var _p8 = msg;
+		switch (_p8.ctor) {
 			case 'Begin':
 				return _user$project$Main$createCircle(model);
 			case 'Tick':
@@ -249,7 +279,7 @@ var _user$project$Main$update = F2(
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{
-						seed: _elm_lang$core$Random$initialSeed(_p5._0)
+						seed: _elm_lang$core$Random$initialSeed(_p8._0)
 					});
 		}
 	});
@@ -290,6 +320,7 @@ var _user$project$Main$names1 = _elm_lang$core$Array$fromList(
 var _user$project$Main$initialModel = {
 	droplist: {ctor: '[]'},
 	time: 0,
+	singleCircleTime: 0,
 	position: 0,
 	seed: _elm_lang$core$Random$initialSeed(0),
 	singleCircle: {ctor: '[]'}

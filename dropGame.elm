@@ -12,6 +12,7 @@ import Time exposing (..)
 import AnimationFrame
 import Array
 import Random
+import Mouse
 
 main = program
   { init = (initialModel, generateInitialSeed),
@@ -24,6 +25,7 @@ generateInitialSeed = Random.generate InitialSeed (Random.int Random.minInt Rand
 
 initialModel = { droplist = []
                , time = 0
+               , singleCircleTime = 0
                , position = 0 
                , seed = Random.initialSeed 0
                , singleCircle = [] }
@@ -44,9 +46,13 @@ type alias Drop = { x : Int
 
 subscriptions model = 
   Sub.batch 
-  [ AnimationFrame.diffs Tick ]
+  [ Mouse.clicks MouseMsg
+  , AnimationFrame.diffs Tick ]
 
-type Msg = Begin | Tick Time | InitialSeed Int 
+type Msg = Begin 
+         | Tick Time 
+         | InitialSeed Int 
+         | MouseMsg Mouse.Position
 
 updateWithCommand msg model =
     (update msg model, Cmd.none)
@@ -56,6 +62,14 @@ update msg model =
     Begin -> createCircle model
     Tick _ -> tick model
     InitialSeed val -> { model | seed = Random.initialSeed val }
+    MouseMsg position ->  checkPosition model
+
+checkPosition model = 
+    model
+    --checkPositionHelper (List.length model.droplist) model position
+
+--checkPositionHelper num model position =
+
 
 createCircle model = 
     creatMoreCircles 5 -200 model
@@ -72,8 +86,6 @@ creatMoreCircles numC xOffset model =
                                         , y = 350
                                         , name = getName2 randomValue
                                         , dropColor = getColor randomValue } :: model.droplist) }
-
-
 getName position =
     case Array.get position names of
         Just s -> s
@@ -86,16 +98,32 @@ getColor i =
         Just s -> s
         _ -> red
 
-
 tick model =
     model
+        |> updateSingleCircle
         |> updateDrops
         |> updateTime
+        |> deleteDrops
 
-updateTime model =
-    case model.time of
-        300 -> addCircles { model | time = 0 }
-        _ -> { model | time = model.time + 1 }
+updateSingleCircle model =
+    case model.singleCircleTime of
+        800 -> { model | singleCircleTime =  0 } 
+        _ -> drawSingleCircleHelper { model | singleCircleTime = model.singleCircleTime + 1 }
+
+drawSingleCircleHelper model =
+    drawSingleCircle 1 model
+
+drawSingleCircle num model =
+    case num of 
+        0 -> model
+        _ -> let (randomValue, newSeed) = Random.step (Random.int 0 5) model.seed in     
+                drawSingleCircle 
+                    (num - 1 )  
+                    { model | seed = newSeed
+                        , singleCircle = ({ x = 305
+                                        , y = 270
+                                        , name = getName2 randomValue
+                                        , dropColor = getColor randomValue } :: model.singleCircle) }
 
 updateDrops model =
     { model | droplist = List.map fall model.droplist }
@@ -103,21 +131,18 @@ updateDrops model =
 fall drop = 
   { drop | y = drop.y - 0.4 }
 
+updateTime model =
+    case model.time of
+        300 -> addCircles { model | time = 0 }
+        _ -> { model | time = model.time + 1 }
+
 addCircles model =
     creatMoreCircles 5 -200 model
 
 drawCanvas model =
-  List.append [ backDropBox blue, drawSingleCircle model ] (List.map drawCircle model.droplist)
+  List.append [ backDropBox blue, drawCircle model.singleCircle] (List.map drawCircle model.droplist)
     |> collage 700 600
     |> toHtml
-
-drawSingleCircle model =
-    group [ circle 30
-                |> filled orange
-            , "name"
-                |> fromString
-                |> Collage.text]
-                |> move (305, 270)
 
 drawCircle model =
     group [ circle 30
