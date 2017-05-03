@@ -27,7 +27,9 @@ initialModel = { droplist = []
                , time = 0
                , singleCircleTime = 0
                , seed = Random.initialSeed 0
-               , singleCircle = [] }
+               , singleCircle = [] 
+               , mPositionX = 0
+               , mPositionY = 0 }
 
 names1 = Array.fromList ["青", "緑", "オレンジ", "赤", "ピーンク", "紫"]
 names = Array.fromList ["blue", "green", "orange", "red", "pink", "purple"]
@@ -61,14 +63,16 @@ update msg model =
     Begin -> createCircle model
     Tick _ -> tick model
     InitialSeed val -> { model | seed = Random.initialSeed val }
-    MouseMsg position ->  checkPosition model
+    MouseMsg position ->  checkPosition position model --{ model | mPositionX = position.x }
 
-checkPosition model =
-    model
+checkPosition position model =
+    { model | droplist = List.filterMap deletClickedDrops model.droplist }
     --checkPositionHelper (List.length model.droplist) model position
 
 --checkPositionHelper num model position =
 
+deletClickedDrops drop =
+    Just drop
 
 createCircle model = 
     creatMoreCircles 5 -200 model
@@ -83,14 +87,16 @@ creatMoreCircles numC xOffset model =
                     { model | seed = newSeed
                         , droplist = ({ x = xOffset
                                         , y = 350
-                                        , name = getName2 randomValue
+                                        , name = getName1 randomValue
                                         , dropColor = getColor randomValue } :: model.droplist) }
 getName position =
     case Array.get position names of
         Just s -> s
         _ -> "No"
 
-getName2 i = Maybe.withDefault "" (Array.get i names)
+getName1 i = Maybe.withDefault "" (Array.get i names)
+
+getName2 i = Maybe.withDefault "" (Array.get i names1)
 
 getColor i =
     case Array.get i colors of
@@ -123,7 +129,7 @@ createSingleCircle num model =
                         , singleCircle = ({ x = 305
                                         , y = 270
                                         , name = getName2 randomValue
-                                        , dropColor = getColor randomValue } :: model.singleCircle) }
+                                        , dropColor = black } :: model.singleCircle) }
 
 updateDrops model =
     { model | droplist = List.map fall model.droplist }
@@ -152,7 +158,7 @@ addCircles model =
 drawCanvas model = -- drawCircle model.singleCircle
   List.concat [ [ backDropBox blue ] 
                 , (List.map drawCircle model.droplist)
-                , (List.map drawCircle (List.reverse model.singleCircle) ) ]
+                , (List.map drawRect (List.reverse model.singleCircle) ) ]
     |> collage 700 600
     |> toHtml
 
@@ -163,6 +169,17 @@ drawCircle model =
             |> fromString
             |> Collage.text]
             |> move (model.x, model.y)
+
+drawRect model =
+    group [ rect 85 60
+            |> filled model.dropColor
+          , model.name
+            |> fromString
+            |> Text.color white
+            |> Text.height 20
+            |> Collage.text]
+            |> move (model.x, model.y)
+
 
 backDropBox color =
     group [ square 600

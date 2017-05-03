@@ -9,6 +9,31 @@ var _user$project$Main$backDropBox = function (color) {
 			_1: {ctor: '[]'}
 		});
 };
+var _user$project$Main$drawRect = function (model) {
+	return A2(
+		_evancz$elm_graphics$Collage$move,
+		{ctor: '_Tuple2', _0: model.x, _1: model.y},
+		_evancz$elm_graphics$Collage$group(
+			{
+				ctor: '::',
+				_0: A2(
+					_evancz$elm_graphics$Collage$filled,
+					model.dropColor,
+					A2(_evancz$elm_graphics$Collage$rect, 85, 60)),
+				_1: {
+					ctor: '::',
+					_0: _evancz$elm_graphics$Collage$text(
+						A2(
+							_evancz$elm_graphics$Text$height,
+							20,
+							A2(
+								_evancz$elm_graphics$Text$color,
+								_elm_lang$core$Color$white,
+								_evancz$elm_graphics$Text$fromString(model.name)))),
+					_1: {ctor: '[]'}
+				}
+			}));
+};
 var _user$project$Main$drawCircle = function (model) {
 	return A2(
 		_evancz$elm_graphics$Collage$move,
@@ -49,7 +74,7 @@ var _user$project$Main$drawCanvas = function (model) {
 							ctor: '::',
 							_0: A2(
 								_elm_lang$core$List$map,
-								_user$project$Main$drawCircle,
+								_user$project$Main$drawRect,
 								_elm_lang$core$List$reverse(model.singleCircle)),
 							_1: {ctor: '[]'}
 						}
@@ -78,9 +103,17 @@ var _user$project$Main$updateDrops = function (model) {
 			droplist: A2(_elm_lang$core$List$map, _user$project$Main$fall, model.droplist)
 		});
 };
-var _user$project$Main$checkPosition = function (model) {
-	return model;
+var _user$project$Main$deletClickedDrops = function (drop) {
+	return _elm_lang$core$Maybe$Just(drop);
 };
+var _user$project$Main$checkPosition = F2(
+	function (position, model) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				droplist: A2(_elm_lang$core$List$filterMap, _user$project$Main$deletClickedDrops, model.droplist)
+			});
+	});
 var _user$project$Main$colors = _elm_lang$core$Array$fromList(
 	{
 		ctor: '::',
@@ -173,7 +206,7 @@ var _user$project$Main$getName = function (position) {
 		return 'No';
 	}
 };
-var _user$project$Main$getName2 = function (i) {
+var _user$project$Main$getName1 = function (i) {
 	return A2(
 		_elm_lang$core$Maybe$withDefault,
 		'',
@@ -204,7 +237,7 @@ var _user$project$Main$creatMoreCircles = F3(
 							_0: {
 								x: xOffset,
 								y: 350,
-								name: _user$project$Main$getName2(randomValue),
+								name: _user$project$Main$getName1(randomValue),
 								dropColor: _user$project$Main$getColor(randomValue)
 							},
 							_1: model.droplist
@@ -236,6 +269,38 @@ var _user$project$Main$updateTime = function (model) {
 			{time: model.time + 1});
 	}
 };
+var _user$project$Main$names1 = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: '青',
+		_1: {
+			ctor: '::',
+			_0: '緑',
+			_1: {
+				ctor: '::',
+				_0: 'オレンジ',
+				_1: {
+					ctor: '::',
+					_0: '赤',
+					_1: {
+						ctor: '::',
+						_0: 'ピーンク',
+						_1: {
+							ctor: '::',
+							_0: '紫',
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
+var _user$project$Main$getName2 = function (i) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		'',
+		A2(_elm_lang$core$Array$get, i, _user$project$Main$names1));
+};
 var _user$project$Main$createSingleCircle = F2(
 	function (num, model) {
 		createSingleCircle:
@@ -261,7 +326,7 @@ var _user$project$Main$createSingleCircle = F2(
 								x: 305,
 								y: 270,
 								name: _user$project$Main$getName2(randomValue),
-								dropColor: _user$project$Main$getColor(randomValue)
+								dropColor: _elm_lang$core$Color$black
 							},
 							_1: model.singleCircle
 						}
@@ -314,7 +379,7 @@ var _user$project$Main$update = F2(
 						seed: _elm_lang$core$Random$initialSeed(_p8._0)
 					});
 			default:
-				return _user$project$Main$checkPosition(model);
+				return A2(_user$project$Main$checkPosition, _p8._0, model);
 		}
 	});
 var _user$project$Main$updateWithCommand = F2(
@@ -325,38 +390,14 @@ var _user$project$Main$updateWithCommand = F2(
 			_1: _elm_lang$core$Platform_Cmd$none
 		};
 	});
-var _user$project$Main$names1 = _elm_lang$core$Array$fromList(
-	{
-		ctor: '::',
-		_0: '青',
-		_1: {
-			ctor: '::',
-			_0: '緑',
-			_1: {
-				ctor: '::',
-				_0: 'オレンジ',
-				_1: {
-					ctor: '::',
-					_0: '赤',
-					_1: {
-						ctor: '::',
-						_0: 'ピーンク',
-						_1: {
-							ctor: '::',
-							_0: '紫',
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			}
-		}
-	});
 var _user$project$Main$initialModel = {
 	droplist: {ctor: '[]'},
 	time: 0,
 	singleCircleTime: 0,
 	seed: _elm_lang$core$Random$initialSeed(0),
-	singleCircle: {ctor: '[]'}
+	singleCircle: {ctor: '[]'},
+	mPositionX: 0,
+	mPositionY: 0
 };
 var _user$project$Main$Drop = F4(
 	function (a, b, c, d) {
