@@ -168,7 +168,7 @@ tick model =
 
 updateSingleCircle model =
     case model.singleCircleTime of
-        200 -> { model | singleCircleTime =  0 } 
+        150 -> { model | singleCircleTime =  0 } 
         1 -> createSingleCircleHelper { model | singleCircleTime = model.singleCircleTime + 1 }
         _ -> { model | singleCircleTime = model.singleCircleTime + 1 }
 
@@ -181,7 +181,7 @@ updateDrops model =
     { model | droplist = List.map fall model.droplist }
 
 fall drop = 
-  { drop | y = drop.y - 0.7 }
+  { drop | y = drop.y - 1.0 }
 
 deleteDrops model =
     { model | droplist = List.filter deleteDropsOffPage model.droplist}
@@ -200,7 +200,7 @@ checkIfWon model =
 
 updateTime model =
     case model.time of
-        200 -> addCircles { model | time = 0 }
+        100 -> addCircles { model | time = 0 }
         _ -> { model | time = model.time + 1 }
 
 addCircles model =
@@ -279,4 +279,5 @@ view model =
     [ drawCanvas model
     , button [ onClick Begin ] [ Html.text "Begin" ] 
     , div [] [ Html.text " Rules: Click on the circle that matches the text in the upper right corner." ]
+    , div [] [ Html.text " If you get 53 points, you win and the game will clear."]
     ]

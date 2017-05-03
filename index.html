@@ -12039,7 +12039,7 @@ var _user$project$Main$deleteDrops = function (model) {
 var _user$project$Main$fall = function (drop) {
 	return _elm_lang$core$Native_Utils.update(
 		drop,
-		{y: drop.y - 0.7});
+		{y: drop.y - 1.0});
 };
 var _user$project$Main$updateDrops = function (model) {
 	return _elm_lang$core$Native_Utils.update(
@@ -12313,7 +12313,7 @@ var _user$project$Main$addCircles = function (model) {
 };
 var _user$project$Main$updateTime = function (model) {
 	var _p5 = model.time;
-	if (_p5 === 200) {
+	if (_p5 === 100) {
 		return _user$project$Main$addCircles(
 			_elm_lang$core$Native_Utils.update(
 				model,
@@ -12472,7 +12472,7 @@ var _user$project$Main$createSingleCircleHelper = function (model) {
 var _user$project$Main$updateSingleCircle = function (model) {
 	var _p8 = model.singleCircleTime;
 	switch (_p8) {
-		case 200:
+		case 150:
 			return _elm_lang$core$Native_Utils.update(
 				model,
 				{singleCircleTime: 0});
@@ -12632,7 +12632,18 @@ var _user$project$Main$view = function (model) {
 							_0: _elm_lang$html$Html$text(' Rules: Click on the circle that matches the text in the upper right corner.'),
 							_1: {ctor: '[]'}
 						}),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(' If you get 53 points, you win and the game will clear.'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});
