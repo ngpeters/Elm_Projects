@@ -26,6 +26,7 @@ generateInitialSeed = Random.generate InitialSeed (Random.int Random.minInt Rand
 initialModel = { droplist = []
                , time = 0
                , singleCircleTime = 0
+               , position = 0 
                , seed = Random.initialSeed 0
                , singleCircle = [] }
 
@@ -45,13 +46,13 @@ type alias Drop = { x : Int
 
 subscriptions model = 
   Sub.batch 
-  [ Mouse.clicks MouseMsg
-   , AnimationFrame.diffs Tick ]
+  [ --Mouse.clicks MouseMsg ,
+   AnimationFrame.diffs Tick ]
 
 type Msg = Begin 
          | Tick Time 
          | InitialSeed Int 
-         | MouseMsg Mouse.Position
+         --| MouseMsg Mouse.Position
 
 updateWithCommand msg model =
     (update msg model, Cmd.none)
@@ -61,10 +62,10 @@ update msg model =
     Begin -> createCircle model
     Tick _ -> tick model
     InitialSeed val -> { model | seed = Random.initialSeed val }
-    MouseMsg position ->  checkPosition model
+    --MouseMsg position ->  checkPosition model
 
-checkPosition model =
-    model
+--checkPosition model = 
+  --  model
     --checkPositionHelper (List.length model.droplist) model position
 
 --checkPositionHelper num model position =
@@ -102,7 +103,7 @@ tick model =
         |> updateSingleCircle
         |> updateDrops
         |> updateTime
-        |> deleteDrops
+        --|> deleteDrops
 
 updateSingleCircle model =
     case model.singleCircleTime of
@@ -131,16 +132,6 @@ updateDrops model =
 fall drop = 
   { drop | y = drop.y - 0.4 }
 
-deleteDrops model =
-    { model | droplist = List.filterMap deleteDropsOffPage model.droplist}
-
-deleteDropsOffPage drop =
-    if drop.y > -350 then 
-        Just drop
-    else
-        Nothing
-
-
 updateTime model =
     case model.time of
         300 -> addCircles { model | time = 0 }
@@ -149,10 +140,8 @@ updateTime model =
 addCircles model =
     creatMoreCircles 5 -200 model
 
-drawCanvas model = -- drawCircle model.singleCircle
-  List.concat [ [ backDropBox blue ] 
-                , (List.map drawCircle model.droplist)
-                , (List.map drawCircle (List.reverse model.singleCircle) ) ]
+drawCanvas model =
+  List.append [ backDropBox blue ] (List.map drawCircle model.droplist)
     |> collage 700 600
     |> toHtml
 
