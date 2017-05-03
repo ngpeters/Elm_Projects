@@ -6592,6 +6592,384 @@ return {
 };
 
 }();
+var _elm_lang$core$Random$onSelfMsg = F3(
+	function (_p1, _p0, seed) {
+		return _elm_lang$core$Task$succeed(seed);
+	});
+var _elm_lang$core$Random$magicNum8 = 2147483562;
+var _elm_lang$core$Random$range = function (_p2) {
+	return {ctor: '_Tuple2', _0: 0, _1: _elm_lang$core$Random$magicNum8};
+};
+var _elm_lang$core$Random$magicNum7 = 2147483399;
+var _elm_lang$core$Random$magicNum6 = 2147483563;
+var _elm_lang$core$Random$magicNum5 = 3791;
+var _elm_lang$core$Random$magicNum4 = 40692;
+var _elm_lang$core$Random$magicNum3 = 52774;
+var _elm_lang$core$Random$magicNum2 = 12211;
+var _elm_lang$core$Random$magicNum1 = 53668;
+var _elm_lang$core$Random$magicNum0 = 40014;
+var _elm_lang$core$Random$step = F2(
+	function (_p3, seed) {
+		var _p4 = _p3;
+		return _p4._0(seed);
+	});
+var _elm_lang$core$Random$onEffects = F3(
+	function (router, commands, seed) {
+		var _p5 = commands;
+		if (_p5.ctor === '[]') {
+			return _elm_lang$core$Task$succeed(seed);
+		} else {
+			var _p6 = A2(_elm_lang$core$Random$step, _p5._0._0, seed);
+			var value = _p6._0;
+			var newSeed = _p6._1;
+			return A2(
+				_elm_lang$core$Task$andThen,
+				function (_p7) {
+					return A3(_elm_lang$core$Random$onEffects, router, _p5._1, newSeed);
+				},
+				A2(_elm_lang$core$Platform$sendToApp, router, value));
+		}
+	});
+var _elm_lang$core$Random$listHelp = F4(
+	function (list, n, generate, seed) {
+		listHelp:
+		while (true) {
+			if (_elm_lang$core$Native_Utils.cmp(n, 1) < 0) {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$List$reverse(list),
+					_1: seed
+				};
+			} else {
+				var _p8 = generate(seed);
+				var value = _p8._0;
+				var newSeed = _p8._1;
+				var _v2 = {ctor: '::', _0: value, _1: list},
+					_v3 = n - 1,
+					_v4 = generate,
+					_v5 = newSeed;
+				list = _v2;
+				n = _v3;
+				generate = _v4;
+				seed = _v5;
+				continue listHelp;
+			}
+		}
+	});
+var _elm_lang$core$Random$minInt = -2147483648;
+var _elm_lang$core$Random$maxInt = 2147483647;
+var _elm_lang$core$Random$iLogBase = F2(
+	function (b, i) {
+		return (_elm_lang$core$Native_Utils.cmp(i, b) < 0) ? 1 : (1 + A2(_elm_lang$core$Random$iLogBase, b, (i / b) | 0));
+	});
+var _elm_lang$core$Random$command = _elm_lang$core$Native_Platform.leaf('Random');
+var _elm_lang$core$Random$Generator = function (a) {
+	return {ctor: 'Generator', _0: a};
+};
+var _elm_lang$core$Random$list = F2(
+	function (n, _p9) {
+		var _p10 = _p9;
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				return A4(
+					_elm_lang$core$Random$listHelp,
+					{ctor: '[]'},
+					n,
+					_p10._0,
+					seed);
+			});
+	});
+var _elm_lang$core$Random$map = F2(
+	function (func, _p11) {
+		var _p12 = _p11;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p13 = _p12._0(seed0);
+				var a = _p13._0;
+				var seed1 = _p13._1;
+				return {
+					ctor: '_Tuple2',
+					_0: func(a),
+					_1: seed1
+				};
+			});
+	});
+var _elm_lang$core$Random$map2 = F3(
+	function (func, _p15, _p14) {
+		var _p16 = _p15;
+		var _p17 = _p14;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p18 = _p16._0(seed0);
+				var a = _p18._0;
+				var seed1 = _p18._1;
+				var _p19 = _p17._0(seed1);
+				var b = _p19._0;
+				var seed2 = _p19._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A2(func, a, b),
+					_1: seed2
+				};
+			});
+	});
+var _elm_lang$core$Random$pair = F2(
+	function (genA, genB) {
+		return A3(
+			_elm_lang$core$Random$map2,
+			F2(
+				function (v0, v1) {
+					return {ctor: '_Tuple2', _0: v0, _1: v1};
+				}),
+			genA,
+			genB);
+	});
+var _elm_lang$core$Random$map3 = F4(
+	function (func, _p22, _p21, _p20) {
+		var _p23 = _p22;
+		var _p24 = _p21;
+		var _p25 = _p20;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p26 = _p23._0(seed0);
+				var a = _p26._0;
+				var seed1 = _p26._1;
+				var _p27 = _p24._0(seed1);
+				var b = _p27._0;
+				var seed2 = _p27._1;
+				var _p28 = _p25._0(seed2);
+				var c = _p28._0;
+				var seed3 = _p28._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A3(func, a, b, c),
+					_1: seed3
+				};
+			});
+	});
+var _elm_lang$core$Random$map4 = F5(
+	function (func, _p32, _p31, _p30, _p29) {
+		var _p33 = _p32;
+		var _p34 = _p31;
+		var _p35 = _p30;
+		var _p36 = _p29;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p37 = _p33._0(seed0);
+				var a = _p37._0;
+				var seed1 = _p37._1;
+				var _p38 = _p34._0(seed1);
+				var b = _p38._0;
+				var seed2 = _p38._1;
+				var _p39 = _p35._0(seed2);
+				var c = _p39._0;
+				var seed3 = _p39._1;
+				var _p40 = _p36._0(seed3);
+				var d = _p40._0;
+				var seed4 = _p40._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A4(func, a, b, c, d),
+					_1: seed4
+				};
+			});
+	});
+var _elm_lang$core$Random$map5 = F6(
+	function (func, _p45, _p44, _p43, _p42, _p41) {
+		var _p46 = _p45;
+		var _p47 = _p44;
+		var _p48 = _p43;
+		var _p49 = _p42;
+		var _p50 = _p41;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p51 = _p46._0(seed0);
+				var a = _p51._0;
+				var seed1 = _p51._1;
+				var _p52 = _p47._0(seed1);
+				var b = _p52._0;
+				var seed2 = _p52._1;
+				var _p53 = _p48._0(seed2);
+				var c = _p53._0;
+				var seed3 = _p53._1;
+				var _p54 = _p49._0(seed3);
+				var d = _p54._0;
+				var seed4 = _p54._1;
+				var _p55 = _p50._0(seed4);
+				var e = _p55._0;
+				var seed5 = _p55._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A5(func, a, b, c, d, e),
+					_1: seed5
+				};
+			});
+	});
+var _elm_lang$core$Random$andThen = F2(
+	function (callback, _p56) {
+		var _p57 = _p56;
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				var _p58 = _p57._0(seed);
+				var result = _p58._0;
+				var newSeed = _p58._1;
+				var _p59 = callback(result);
+				var genB = _p59._0;
+				return genB(newSeed);
+			});
+	});
+var _elm_lang$core$Random$State = F2(
+	function (a, b) {
+		return {ctor: 'State', _0: a, _1: b};
+	});
+var _elm_lang$core$Random$initState = function (seed) {
+	var s = A2(_elm_lang$core$Basics$max, seed, 0 - seed);
+	var q = (s / (_elm_lang$core$Random$magicNum6 - 1)) | 0;
+	var s2 = A2(_elm_lang$core$Basics_ops['%'], q, _elm_lang$core$Random$magicNum7 - 1);
+	var s1 = A2(_elm_lang$core$Basics_ops['%'], s, _elm_lang$core$Random$magicNum6 - 1);
+	return A2(_elm_lang$core$Random$State, s1 + 1, s2 + 1);
+};
+var _elm_lang$core$Random$next = function (_p60) {
+	var _p61 = _p60;
+	var _p63 = _p61._1;
+	var _p62 = _p61._0;
+	var k2 = (_p63 / _elm_lang$core$Random$magicNum3) | 0;
+	var rawState2 = (_elm_lang$core$Random$magicNum4 * (_p63 - (k2 * _elm_lang$core$Random$magicNum3))) - (k2 * _elm_lang$core$Random$magicNum5);
+	var newState2 = (_elm_lang$core$Native_Utils.cmp(rawState2, 0) < 0) ? (rawState2 + _elm_lang$core$Random$magicNum7) : rawState2;
+	var k1 = (_p62 / _elm_lang$core$Random$magicNum1) | 0;
+	var rawState1 = (_elm_lang$core$Random$magicNum0 * (_p62 - (k1 * _elm_lang$core$Random$magicNum1))) - (k1 * _elm_lang$core$Random$magicNum2);
+	var newState1 = (_elm_lang$core$Native_Utils.cmp(rawState1, 0) < 0) ? (rawState1 + _elm_lang$core$Random$magicNum6) : rawState1;
+	var z = newState1 - newState2;
+	var newZ = (_elm_lang$core$Native_Utils.cmp(z, 1) < 0) ? (z + _elm_lang$core$Random$magicNum8) : z;
+	return {
+		ctor: '_Tuple2',
+		_0: newZ,
+		_1: A2(_elm_lang$core$Random$State, newState1, newState2)
+	};
+};
+var _elm_lang$core$Random$split = function (_p64) {
+	var _p65 = _p64;
+	var _p68 = _p65._1;
+	var _p67 = _p65._0;
+	var _p66 = _elm_lang$core$Tuple$second(
+		_elm_lang$core$Random$next(_p65));
+	var t1 = _p66._0;
+	var t2 = _p66._1;
+	var new_s2 = _elm_lang$core$Native_Utils.eq(_p68, 1) ? (_elm_lang$core$Random$magicNum7 - 1) : (_p68 - 1);
+	var new_s1 = _elm_lang$core$Native_Utils.eq(_p67, _elm_lang$core$Random$magicNum6 - 1) ? 1 : (_p67 + 1);
+	return {
+		ctor: '_Tuple2',
+		_0: A2(_elm_lang$core$Random$State, new_s1, t2),
+		_1: A2(_elm_lang$core$Random$State, t1, new_s2)
+	};
+};
+var _elm_lang$core$Random$Seed = function (a) {
+	return {ctor: 'Seed', _0: a};
+};
+var _elm_lang$core$Random$int = F2(
+	function (a, b) {
+		return _elm_lang$core$Random$Generator(
+			function (_p69) {
+				var _p70 = _p69;
+				var _p75 = _p70._0;
+				var base = 2147483561;
+				var f = F3(
+					function (n, acc, state) {
+						f:
+						while (true) {
+							var _p71 = n;
+							if (_p71 === 0) {
+								return {ctor: '_Tuple2', _0: acc, _1: state};
+							} else {
+								var _p72 = _p75.next(state);
+								var x = _p72._0;
+								var nextState = _p72._1;
+								var _v27 = n - 1,
+									_v28 = x + (acc * base),
+									_v29 = nextState;
+								n = _v27;
+								acc = _v28;
+								state = _v29;
+								continue f;
+							}
+						}
+					});
+				var _p73 = (_elm_lang$core$Native_Utils.cmp(a, b) < 0) ? {ctor: '_Tuple2', _0: a, _1: b} : {ctor: '_Tuple2', _0: b, _1: a};
+				var lo = _p73._0;
+				var hi = _p73._1;
+				var k = (hi - lo) + 1;
+				var n = A2(_elm_lang$core$Random$iLogBase, base, k);
+				var _p74 = A3(f, n, 1, _p75.state);
+				var v = _p74._0;
+				var nextState = _p74._1;
+				return {
+					ctor: '_Tuple2',
+					_0: lo + A2(_elm_lang$core$Basics_ops['%'], v, k),
+					_1: _elm_lang$core$Random$Seed(
+						_elm_lang$core$Native_Utils.update(
+							_p75,
+							{state: nextState}))
+				};
+			});
+	});
+var _elm_lang$core$Random$bool = A2(
+	_elm_lang$core$Random$map,
+	F2(
+		function (x, y) {
+			return _elm_lang$core$Native_Utils.eq(x, y);
+		})(1),
+	A2(_elm_lang$core$Random$int, 0, 1));
+var _elm_lang$core$Random$float = F2(
+	function (a, b) {
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				var _p76 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$int, _elm_lang$core$Random$minInt, _elm_lang$core$Random$maxInt),
+					seed);
+				var number = _p76._0;
+				var newSeed = _p76._1;
+				var negativeOneToOne = _elm_lang$core$Basics$toFloat(number) / _elm_lang$core$Basics$toFloat(_elm_lang$core$Random$maxInt - _elm_lang$core$Random$minInt);
+				var _p77 = (_elm_lang$core$Native_Utils.cmp(a, b) < 0) ? {ctor: '_Tuple2', _0: a, _1: b} : {ctor: '_Tuple2', _0: b, _1: a};
+				var lo = _p77._0;
+				var hi = _p77._1;
+				var scaled = ((lo + hi) / 2) + ((hi - lo) * negativeOneToOne);
+				return {ctor: '_Tuple2', _0: scaled, _1: newSeed};
+			});
+	});
+var _elm_lang$core$Random$initialSeed = function (n) {
+	return _elm_lang$core$Random$Seed(
+		{
+			state: _elm_lang$core$Random$initState(n),
+			next: _elm_lang$core$Random$next,
+			split: _elm_lang$core$Random$split,
+			range: _elm_lang$core$Random$range
+		});
+};
+var _elm_lang$core$Random$init = A2(
+	_elm_lang$core$Task$andThen,
+	function (t) {
+		return _elm_lang$core$Task$succeed(
+			_elm_lang$core$Random$initialSeed(
+				_elm_lang$core$Basics$round(t)));
+	},
+	_elm_lang$core$Time$now);
+var _elm_lang$core$Random$Generate = function (a) {
+	return {ctor: 'Generate', _0: a};
+};
+var _elm_lang$core$Random$generate = F2(
+	function (tagger, generator) {
+		return _elm_lang$core$Random$command(
+			_elm_lang$core$Random$Generate(
+				A2(_elm_lang$core$Random$map, tagger, generator)));
+	});
+var _elm_lang$core$Random$cmdMap = F2(
+	function (func, _p78) {
+		var _p79 = _p78;
+		return _elm_lang$core$Random$Generate(
+			A2(_elm_lang$core$Random$map, func, _p79._0));
+	});
+_elm_lang$core$Native_Platform.effectManagers['Random'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Random$init, onEffects: _elm_lang$core$Random$onEffects, onSelfMsg: _elm_lang$core$Random$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Random$cmdMap};
 var _elm_lang$core$Regex$split = _elm_lang$core$Native_Regex.split;
 var _elm_lang$core$Regex$replace = _elm_lang$core$Native_Regex.replace;
 var _elm_lang$core$Regex$find = _elm_lang$core$Native_Regex.find;
@@ -6608,6 +6986,190 @@ var _elm_lang$core$Regex$AtMost = function (a) {
 	return {ctor: 'AtMost', _0: a};
 };
 var _elm_lang$core$Regex$All = {ctor: 'All'};
+var _elm_lang$dom$Native_Dom = function() {
+
+var fakeNode = {
+	addEventListener: function() {},
+	removeEventListener: function() {}
+};
+
+var onDocument = on(typeof document !== 'undefined' ? document : fakeNode);
+var onWindow = on(typeof window !== 'undefined' ? window : fakeNode);
+
+function on(node)
+{
+	return function(eventName, decoder, toTask)
+	{
+		return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
+
+			function performTask(event)
+			{
+				var result = A2(_elm_lang$core$Json_Decode$decodeValue, decoder, event);
+				if (result.ctor === 'Ok')
+				{
+					_elm_lang$core$Native_Scheduler.rawSpawn(toTask(result._0));
+				}
+			}
+
+			node.addEventListener(eventName, performTask);
+
+			return function()
+			{
+				node.removeEventListener(eventName, performTask);
+			};
+		});
+	};
+}
+
+var rAF = typeof requestAnimationFrame !== 'undefined'
+	? requestAnimationFrame
+	: function(callback) { callback(); };
+
+function withNode(id, doStuff)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		rAF(function()
+		{
+			var node = document.getElementById(id);
+			if (node === null)
+			{
+				callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'NotFound', _0: id }));
+				return;
+			}
+			callback(_elm_lang$core$Native_Scheduler.succeed(doStuff(node)));
+		});
+	});
+}
+
+
+// FOCUS
+
+function focus(id)
+{
+	return withNode(id, function(node) {
+		node.focus();
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+function blur(id)
+{
+	return withNode(id, function(node) {
+		node.blur();
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+
+// SCROLLING
+
+function getScrollTop(id)
+{
+	return withNode(id, function(node) {
+		return node.scrollTop;
+	});
+}
+
+function setScrollTop(id, desiredScrollTop)
+{
+	return withNode(id, function(node) {
+		node.scrollTop = desiredScrollTop;
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+function toBottom(id)
+{
+	return withNode(id, function(node) {
+		node.scrollTop = node.scrollHeight;
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+function getScrollLeft(id)
+{
+	return withNode(id, function(node) {
+		return node.scrollLeft;
+	});
+}
+
+function setScrollLeft(id, desiredScrollLeft)
+{
+	return withNode(id, function(node) {
+		node.scrollLeft = desiredScrollLeft;
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+function toRight(id)
+{
+	return withNode(id, function(node) {
+		node.scrollLeft = node.scrollWidth;
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+
+// SIZE
+
+function width(options, id)
+{
+	return withNode(id, function(node) {
+		switch (options.ctor)
+		{
+			case 'Content':
+				return node.scrollWidth;
+			case 'VisibleContent':
+				return node.clientWidth;
+			case 'VisibleContentWithBorders':
+				return node.offsetWidth;
+			case 'VisibleContentWithBordersAndMargins':
+				var rect = node.getBoundingClientRect();
+				return rect.right - rect.left;
+		}
+	});
+}
+
+function height(options, id)
+{
+	return withNode(id, function(node) {
+		switch (options.ctor)
+		{
+			case 'Content':
+				return node.scrollHeight;
+			case 'VisibleContent':
+				return node.clientHeight;
+			case 'VisibleContentWithBorders':
+				return node.offsetHeight;
+			case 'VisibleContentWithBordersAndMargins':
+				var rect = node.getBoundingClientRect();
+				return rect.bottom - rect.top;
+		}
+	});
+}
+
+return {
+	onDocument: F3(onDocument),
+	onWindow: F3(onWindow),
+
+	focus: focus,
+	blur: blur,
+
+	getScrollTop: getScrollTop,
+	setScrollTop: F2(setScrollTop),
+	getScrollLeft: getScrollLeft,
+	setScrollLeft: F2(setScrollLeft),
+	toBottom: toBottom,
+	toRight: toRight,
+
+	height: F2(height),
+	width: F2(width)
+};
+
+}();
+var _elm_lang$dom$Dom_LowLevel$onWindow = _elm_lang$dom$Native_Dom.onWindow;
+var _elm_lang$dom$Dom_LowLevel$onDocument = _elm_lang$dom$Native_Dom.onDocument;
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrap;
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags;
 
@@ -8757,6 +9319,188 @@ var _elm_lang$html$Html_Events$Options = F2(
 	function (a, b) {
 		return {stopPropagation: a, preventDefault: b};
 	});
+var _elm_lang$mouse$Mouse_ops = _elm_lang$mouse$Mouse_ops || {};
+_elm_lang$mouse$Mouse_ops['&>'] = F2(
+	function (t1, t2) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (_p0) {
+				return t2;
+			},
+			t1);
+	});
+var _elm_lang$mouse$Mouse$onSelfMsg = F3(
+	function (router, _p1, state) {
+		var _p2 = _p1;
+		var _p3 = A2(_elm_lang$core$Dict$get, _p2.category, state);
+		if (_p3.ctor === 'Nothing') {
+			return _elm_lang$core$Task$succeed(state);
+		} else {
+			var send = function (tagger) {
+				return A2(
+					_elm_lang$core$Platform$sendToApp,
+					router,
+					tagger(_p2.position));
+			};
+			return A2(
+				_elm_lang$mouse$Mouse_ops['&>'],
+				_elm_lang$core$Task$sequence(
+					A2(_elm_lang$core$List$map, send, _p3._0.taggers)),
+				_elm_lang$core$Task$succeed(state));
+		}
+	});
+var _elm_lang$mouse$Mouse$init = _elm_lang$core$Task$succeed(_elm_lang$core$Dict$empty);
+var _elm_lang$mouse$Mouse$categorizeHelpHelp = F2(
+	function (value, maybeValues) {
+		var _p4 = maybeValues;
+		if (_p4.ctor === 'Nothing') {
+			return _elm_lang$core$Maybe$Just(
+				{
+					ctor: '::',
+					_0: value,
+					_1: {ctor: '[]'}
+				});
+		} else {
+			return _elm_lang$core$Maybe$Just(
+				{ctor: '::', _0: value, _1: _p4._0});
+		}
+	});
+var _elm_lang$mouse$Mouse$categorizeHelp = F2(
+	function (subs, subDict) {
+		categorizeHelp:
+		while (true) {
+			var _p5 = subs;
+			if (_p5.ctor === '[]') {
+				return subDict;
+			} else {
+				var _v4 = _p5._1,
+					_v5 = A3(
+					_elm_lang$core$Dict$update,
+					_p5._0._0,
+					_elm_lang$mouse$Mouse$categorizeHelpHelp(_p5._0._1),
+					subDict);
+				subs = _v4;
+				subDict = _v5;
+				continue categorizeHelp;
+			}
+		}
+	});
+var _elm_lang$mouse$Mouse$categorize = function (subs) {
+	return A2(_elm_lang$mouse$Mouse$categorizeHelp, subs, _elm_lang$core$Dict$empty);
+};
+var _elm_lang$mouse$Mouse$subscription = _elm_lang$core$Native_Platform.leaf('Mouse');
+var _elm_lang$mouse$Mouse$Position = F2(
+	function (a, b) {
+		return {x: a, y: b};
+	});
+var _elm_lang$mouse$Mouse$position = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_elm_lang$mouse$Mouse$Position,
+	A2(_elm_lang$core$Json_Decode$field, 'pageX', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'pageY', _elm_lang$core$Json_Decode$int));
+var _elm_lang$mouse$Mouse$Watcher = F2(
+	function (a, b) {
+		return {taggers: a, pid: b};
+	});
+var _elm_lang$mouse$Mouse$Msg = F2(
+	function (a, b) {
+		return {category: a, position: b};
+	});
+var _elm_lang$mouse$Mouse$onEffects = F3(
+	function (router, newSubs, oldState) {
+		var rightStep = F3(
+			function (category, taggers, task) {
+				var tracker = A3(
+					_elm_lang$dom$Dom_LowLevel$onDocument,
+					category,
+					_elm_lang$mouse$Mouse$position,
+					function (_p6) {
+						return A2(
+							_elm_lang$core$Platform$sendToSelf,
+							router,
+							A2(_elm_lang$mouse$Mouse$Msg, category, _p6));
+					});
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (state) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (pid) {
+								return _elm_lang$core$Task$succeed(
+									A3(
+										_elm_lang$core$Dict$insert,
+										category,
+										A2(_elm_lang$mouse$Mouse$Watcher, taggers, pid),
+										state));
+							},
+							_elm_lang$core$Process$spawn(tracker));
+					},
+					task);
+			});
+		var bothStep = F4(
+			function (category, _p7, taggers, task) {
+				var _p8 = _p7;
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (state) {
+						return _elm_lang$core$Task$succeed(
+							A3(
+								_elm_lang$core$Dict$insert,
+								category,
+								A2(_elm_lang$mouse$Mouse$Watcher, taggers, _p8.pid),
+								state));
+					},
+					task);
+			});
+		var leftStep = F3(
+			function (category, _p9, task) {
+				var _p10 = _p9;
+				return A2(
+					_elm_lang$mouse$Mouse_ops['&>'],
+					_elm_lang$core$Process$kill(_p10.pid),
+					task);
+			});
+		return A6(
+			_elm_lang$core$Dict$merge,
+			leftStep,
+			bothStep,
+			rightStep,
+			oldState,
+			_elm_lang$mouse$Mouse$categorize(newSubs),
+			_elm_lang$core$Task$succeed(_elm_lang$core$Dict$empty));
+	});
+var _elm_lang$mouse$Mouse$MySub = F2(
+	function (a, b) {
+		return {ctor: 'MySub', _0: a, _1: b};
+	});
+var _elm_lang$mouse$Mouse$clicks = function (tagger) {
+	return _elm_lang$mouse$Mouse$subscription(
+		A2(_elm_lang$mouse$Mouse$MySub, 'click', tagger));
+};
+var _elm_lang$mouse$Mouse$moves = function (tagger) {
+	return _elm_lang$mouse$Mouse$subscription(
+		A2(_elm_lang$mouse$Mouse$MySub, 'mousemove', tagger));
+};
+var _elm_lang$mouse$Mouse$downs = function (tagger) {
+	return _elm_lang$mouse$Mouse$subscription(
+		A2(_elm_lang$mouse$Mouse$MySub, 'mousedown', tagger));
+};
+var _elm_lang$mouse$Mouse$ups = function (tagger) {
+	return _elm_lang$mouse$Mouse$subscription(
+		A2(_elm_lang$mouse$Mouse$MySub, 'mouseup', tagger));
+};
+var _elm_lang$mouse$Mouse$subMap = F2(
+	function (func, _p11) {
+		var _p12 = _p11;
+		return A2(
+			_elm_lang$mouse$Mouse$MySub,
+			_p12._0,
+			function (_p13) {
+				return func(
+					_p12._1(_p13));
+			});
+	});
+_elm_lang$core$Native_Platform.effectManagers['Mouse'] = {pkg: 'elm-lang/mouse', init: _elm_lang$mouse$Mouse$init, onEffects: _elm_lang$mouse$Mouse$onEffects, onSelfMsg: _elm_lang$mouse$Mouse$onSelfMsg, tag: 'sub', subMap: _elm_lang$mouse$Mouse$subMap};
 var _evancz$elm_graphics$Native_Element = function()
 {
 
@@ -11198,6 +11942,23 @@ var _evancz$elm_graphics$Collage$ngon = F2(
 				f,
 				A2(_elm_lang$core$List$range, 0, n - 1)));
 	});
+var _user$project$Main$winBox = _evancz$elm_graphics$Collage$group(
+	{
+		ctor: '::',
+		_0: A2(
+			_evancz$elm_graphics$Collage$filled,
+			_elm_lang$core$Color$yellow,
+			A2(_evancz$elm_graphics$Collage$rect, 300, 100)),
+		_1: {
+			ctor: '::',
+			_0: _evancz$elm_graphics$Collage$text(
+				A2(
+					_evancz$elm_graphics$Text$height,
+					40,
+					_evancz$elm_graphics$Text$fromString('You Win'))),
+			_1: {ctor: '[]'}
+		}
+	});
 var _user$project$Main$backDropBox = function (color) {
 	return _evancz$elm_graphics$Collage$group(
 		{
@@ -11205,7 +11966,7 @@ var _user$project$Main$backDropBox = function (color) {
 			_0: A2(
 				_evancz$elm_graphics$Collage$filled,
 				color,
-				_evancz$elm_graphics$Collage$square(500)),
+				_evancz$elm_graphics$Collage$square(600)),
 			_1: {ctor: '[]'}
 		});
 };
@@ -11228,25 +11989,57 @@ var _user$project$Main$drawCircle = function (model) {
 				}
 			}));
 };
-var _user$project$Main$drawCanvas = function (model) {
-	return _evancz$elm_graphics$Element$toHtml(
-		A3(
-			_evancz$elm_graphics$Collage$collage,
-			500,
-			500,
-			A2(
-				_elm_lang$core$List$append,
-				{
-					ctor: '::',
-					_0: _user$project$Main$backDropBox(_elm_lang$core$Color$blue),
-					_1: {ctor: '[]'}
-				},
-				A2(_elm_lang$core$List$map, _user$project$Main$drawCircle, model.droplist))));
+var _user$project$Main$drawSinglePoint = function (pointColor) {
+	return A2(
+		_evancz$elm_graphics$Collage$move,
+		{ctor: '_Tuple2', _0: 310, _1: pointColor.y},
+		_evancz$elm_graphics$Collage$group(
+			{
+				ctor: '::',
+				_0: A2(
+					_evancz$elm_graphics$Collage$filled,
+					pointColor.pColor,
+					A2(_evancz$elm_graphics$Collage$rect, 30, 10)),
+				_1: {ctor: '[]'}
+			}));
+};
+var _user$project$Main$drawPointsBox = A2(
+	_evancz$elm_graphics$Collage$move,
+	{ctor: '_Tuple2', _0: 310, _1: -35},
+	_evancz$elm_graphics$Collage$group(
+		{
+			ctor: '::',
+			_0: A2(
+				_evancz$elm_graphics$Collage$filled,
+				A3(
+					_elm_lang$core$Color$hsl,
+					_elm_lang$core$Basics$degrees(256),
+					0.61,
+					0.5),
+				A2(_evancz$elm_graphics$Collage$rect, 30, 530)),
+			_1: {ctor: '[]'}
+		}));
+var _user$project$Main$deleteExtraPoints = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			pointsColor: A2(_elm_lang$core$List$take, model.points, model.pointsColor)
+		});
+};
+var _user$project$Main$deleteDropsOffPage = function (drop) {
+	return _elm_lang$core$Native_Utils.cmp(drop.y, -350) > 0;
+};
+var _user$project$Main$deleteDrops = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			droplist: A2(_elm_lang$core$List$filter, _user$project$Main$deleteDropsOffPage, model.droplist)
+		});
 };
 var _user$project$Main$fall = function (drop) {
 	return _elm_lang$core$Native_Utils.update(
 		drop,
-		{y: drop.y - 0.4});
+		{y: drop.y - 0.7});
 };
 var _user$project$Main$updateDrops = function (model) {
 	return _elm_lang$core$Native_Utils.update(
@@ -11254,6 +12047,134 @@ var _user$project$Main$updateDrops = function (model) {
 		{
 			droplist: A2(_elm_lang$core$List$map, _user$project$Main$fall, model.droplist)
 		});
+};
+var _user$project$Main$isRightColor = F2(
+	function (singleDrop, clickedDrop) {
+		return _elm_lang$core$Native_Utils.eq(singleDrop, clickedDrop.dropColorIndex);
+	});
+var _user$project$Main$deletClickedDrops = F2(
+	function (model, drop) {
+		return !((_elm_lang$core$Native_Utils.cmp(
+			_elm_lang$core$Basics$abs(
+				_elm_lang$core$Basics$toFloat(model.mPositionX) - drop.x),
+			30) < 0) && ((_elm_lang$core$Native_Utils.cmp(
+			_elm_lang$core$Basics$abs(
+				_elm_lang$core$Basics$toFloat(model.mPositionY) - drop.y),
+			30) < 0) && A2(_user$project$Main$isRightColor, model.singleCircle, drop)));
+	});
+var _user$project$Main$onlyUpdateIf = F2(
+	function (tick, model) {
+		return model.isPlaying ? tick(model) : model;
+	});
+var _user$project$Main$pointColors = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: A3(
+			_elm_lang$core$Color$hsl,
+			_elm_lang$core$Basics$degrees(171),
+			0.86,
+			0.42),
+		_1: {
+			ctor: '::',
+			_0: A3(
+				_elm_lang$core$Color$hsl,
+				_elm_lang$core$Basics$degrees(157),
+				0.86,
+				0.47),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_elm_lang$core$Color$hsl,
+					_elm_lang$core$Basics$degrees(131),
+					0.43,
+					0.47),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_elm_lang$core$Color$hsl,
+						_elm_lang$core$Basics$degrees(195),
+						0.7,
+						0.51),
+					_1: {
+						ctor: '::',
+						_0: A3(
+							_elm_lang$core$Color$hsl,
+							_elm_lang$core$Basics$degrees(208),
+							0.68,
+							0.51),
+						_1: {
+							ctor: '::',
+							_0: A3(
+								_elm_lang$core$Color$hsl,
+								_elm_lang$core$Basics$degrees(252),
+								0.39,
+								0.51),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
+var _user$project$Main$getPointColor = function (i) {
+	var _p0 = A2(_elm_lang$core$Array$get, i, _user$project$Main$pointColors);
+	if (_p0.ctor === 'Just') {
+		return _p0._0;
+	} else {
+		return _elm_lang$core$Color$black;
+	}
+};
+var _user$project$Main$addUpPoints = F3(
+	function (pointsCount, yOffset, model) {
+		addUpPoints:
+		while (true) {
+			var _p1 = pointsCount;
+			if (_p1 === 0) {
+				return model;
+			} else {
+				var _v2 = pointsCount - 1,
+					_v3 = yOffset + 10,
+					_v4 = _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						pointsColor: {
+							ctor: '::',
+							_0: {
+								y: yOffset,
+								pColor: _user$project$Main$getPointColor(model.arrayPosition),
+								pointIndex: model.points
+							},
+							_1: model.pointsColor
+						},
+						arrayPosition: A2(
+							_elm_lang$core$Basics_ops['%'],
+							model.arrayPosition + 1,
+							_elm_lang$core$Array$length(_user$project$Main$pointColors))
+					});
+				pointsCount = _v2;
+				yOffset = _v3;
+				model = _v4;
+				continue addUpPoints;
+			}
+		}
+	});
+var _user$project$Main$updatePointsCounter = function (model) {
+	return A3(_user$project$Main$addUpPoints, model.points, -295.0, model);
+};
+var _user$project$Main$checkPosition = function (model) {
+	return _user$project$Main$updatePointsCounter(
+		_elm_lang$core$Native_Utils.update(
+			model,
+			{
+				droplist: A2(
+					_elm_lang$core$List$filter,
+					_user$project$Main$deletClickedDrops(model),
+					model.droplist),
+				points: A2(
+					_elm_lang$core$List$all,
+					_user$project$Main$deletClickedDrops(model),
+					model.droplist) ? model.points : (model.points + 1)
+			}));
 };
 var _user$project$Main$colors = _elm_lang$core$Array$fromList(
 	{
@@ -11288,9 +12209,9 @@ var _user$project$Main$colors = _elm_lang$core$Array$fromList(
 						ctor: '::',
 						_0: A3(
 							_elm_lang$core$Color$hsl,
-							_elm_lang$core$Basics$degrees(317),
-							0.49,
-							0.5),
+							_elm_lang$core$Basics$degrees(337),
+							0.88,
+							0.77),
 						_1: {
 							ctor: '::',
 							_0: A3(
@@ -11305,33 +12226,33 @@ var _user$project$Main$colors = _elm_lang$core$Array$fromList(
 			}
 		}
 	});
-var _user$project$Main$getColor = function (position) {
-	var _p0 = A2(_elm_lang$core$Array$get, position, _user$project$Main$colors);
-	if (_p0.ctor === 'Just') {
-		return _p0._0;
+var _user$project$Main$getColor = function (i) {
+	var _p2 = A2(_elm_lang$core$Array$get, i, _user$project$Main$colors);
+	if (_p2.ctor === 'Just') {
+		return _p2._0;
 	} else {
 		return _elm_lang$core$Color$red;
 	}
 };
-var _user$project$Main$names = _elm_lang$core$Array$fromList(
+var _user$project$Main$names2 = _elm_lang$core$Array$fromList(
 	{
 		ctor: '::',
-		_0: 'a',
+		_0: 'あお',
 		_1: {
 			ctor: '::',
-			_0: 'b',
+			_0: 'みどり',
 			_1: {
 				ctor: '::',
-				_0: 'c',
+				_0: 'おれんじ',
 				_1: {
 					ctor: '::',
-					_0: 'd',
+					_0: 'あか',
 					_1: {
 						ctor: '::',
-						_0: 'e',
+						_0: 'ぴんく',
 						_1: {
 							ctor: '::',
-							_0: 'f',
+							_0: 'むらさき',
 							_1: {ctor: '[]'}
 						}
 					}
@@ -11339,58 +12260,60 @@ var _user$project$Main$names = _elm_lang$core$Array$fromList(
 			}
 		}
 	});
-var _user$project$Main$getName = function (position) {
-	var _p1 = A2(_elm_lang$core$Array$get, position, _user$project$Main$names);
-	if (_p1.ctor === 'Just') {
-		return _p1._0;
-	} else {
-		return 'No';
-	}
+var _user$project$Main$getName3 = function (i) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		'',
+		A2(_elm_lang$core$Array$get, i, _user$project$Main$names2));
 };
-var _user$project$Main$creatMoreCircles = F3(
+var _user$project$Main$createMoreCircles = F3(
 	function (numC, xOffset, model) {
-		creatMoreCircles:
+		createMoreCircles:
 		while (true) {
-			var _p2 = numC;
-			if (_p2 === 0) {
+			var _p3 = numC;
+			if (_p3 === 0) {
 				return model;
 			} else {
-				var _v3 = numC - 1,
-					_v4 = xOffset + 100,
-					_v5 = _elm_lang$core$Native_Utils.update(
+				var _p4 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$int, 0, 5),
+					model.seed);
+				var randomValue = _p4._0;
+				var newSeed = _p4._1;
+				var _v7 = numC - 1,
+					_v8 = xOffset + 100,
+					_v9 = _elm_lang$core$Native_Utils.update(
 					model,
 					{
+						seed: newSeed,
 						droplist: {
 							ctor: '::',
 							_0: {
 								x: xOffset,
-								y: 300,
-								name: _user$project$Main$getName(model.position),
-								dropColor: _user$project$Main$getColor(model.position)
+								y: 350.0,
+								name: _user$project$Main$getName3(randomValue),
+								dropColor: _user$project$Main$getColor(randomValue),
+								dropColorIndex: randomValue
 							},
 							_1: model.droplist
-						},
-						position: A2(
-							_elm_lang$core$Basics_ops['%'],
-							model.position + 1,
-							_elm_lang$core$Array$length(_user$project$Main$names))
+						}
 					});
-				numC = _v3;
-				xOffset = _v4;
-				model = _v5;
-				continue creatMoreCircles;
+				numC = _v7;
+				xOffset = _v8;
+				model = _v9;
+				continue createMoreCircles;
 			}
 		}
 	});
 var _user$project$Main$createCircle = function (model) {
-	return A3(_user$project$Main$creatMoreCircles, 5, -200, model);
+	return A3(_user$project$Main$createMoreCircles, 5, -200.0, model);
 };
 var _user$project$Main$addCircles = function (model) {
-	return A3(_user$project$Main$creatMoreCircles, 5, -200, model);
+	return A3(_user$project$Main$createMoreCircles, 5, -200.0, model);
 };
 var _user$project$Main$updateTime = function (model) {
-	var _p3 = model.time;
-	if (_p3 === 300) {
+	var _p5 = model.time;
+	if (_p5 === 200) {
 		return _user$project$Main$addCircles(
 			_elm_lang$core$Native_Utils.update(
 				model,
@@ -11401,17 +12324,216 @@ var _user$project$Main$updateTime = function (model) {
 			{time: model.time + 1});
 	}
 };
+var _user$project$Main$names = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: 'blue',
+		_1: {
+			ctor: '::',
+			_0: 'green',
+			_1: {
+				ctor: '::',
+				_0: 'orange',
+				_1: {
+					ctor: '::',
+					_0: 'red',
+					_1: {
+						ctor: '::',
+						_0: 'pink',
+						_1: {
+							ctor: '::',
+							_0: 'purple',
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
+var _user$project$Main$getName = function (position) {
+	var _p6 = A2(_elm_lang$core$Array$get, position, _user$project$Main$names);
+	if (_p6.ctor === 'Just') {
+		return _p6._0;
+	} else {
+		return 'No';
+	}
+};
+var _user$project$Main$getName1 = function (i) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		'',
+		A2(_elm_lang$core$Array$get, i, _user$project$Main$names));
+};
+var _user$project$Main$names1 = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: '青',
+		_1: {
+			ctor: '::',
+			_0: '緑',
+			_1: {
+				ctor: '::',
+				_0: 'オレンジ',
+				_1: {
+					ctor: '::',
+					_0: '赤',
+					_1: {
+						ctor: '::',
+						_0: 'ピーンク',
+						_1: {
+							ctor: '::',
+							_0: '紫',
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
+var _user$project$Main$getName2 = function (i) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		'',
+		A2(_elm_lang$core$Array$get, i, _user$project$Main$names1));
+};
+var _user$project$Main$drawRect = function (model) {
+	return A2(
+		_evancz$elm_graphics$Collage$move,
+		{ctor: '_Tuple2', _0: 305.0, _1: 270.0},
+		_evancz$elm_graphics$Collage$group(
+			{
+				ctor: '::',
+				_0: A2(
+					_evancz$elm_graphics$Collage$filled,
+					_elm_lang$core$Color$black,
+					A2(_evancz$elm_graphics$Collage$rect, 85, 60)),
+				_1: {
+					ctor: '::',
+					_0: _evancz$elm_graphics$Collage$text(
+						A2(
+							_evancz$elm_graphics$Text$height,
+							20,
+							A2(
+								_evancz$elm_graphics$Text$color,
+								_elm_lang$core$Color$white,
+								_evancz$elm_graphics$Text$fromString(
+									_user$project$Main$getName2(model.singleCircle))))),
+					_1: {ctor: '[]'}
+				}
+			}));
+};
+var _user$project$Main$drawCanvas = function (model) {
+	return _evancz$elm_graphics$Element$toHtml(
+		A3(
+			_evancz$elm_graphics$Collage$collage,
+			700,
+			600,
+			_elm_lang$core$List$concat(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '::',
+						_0: _user$project$Main$backDropBox(_elm_lang$core$Color$blue),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$drawPointsBox,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Main$drawRect(model),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					_1: {
+						ctor: '::',
+						_0: A2(_elm_lang$core$List$map, _user$project$Main$drawCircle, model.droplist),
+						_1: {
+							ctor: '::',
+							_0: A2(_elm_lang$core$List$map, _user$project$Main$drawSinglePoint, model.pointsColor),
+							_1: {ctor: '[]'}
+						}
+					}
+				})));
+};
+var _user$project$Main$createSingleCircleHelper = function (model) {
+	var _p7 = A2(
+		_elm_lang$core$Random$step,
+		A2(
+			_elm_lang$core$Random$int,
+			0,
+			_elm_lang$core$Array$length(_user$project$Main$names1) - 1),
+		model.seed);
+	var randomValue = _p7._0;
+	var newSeed = _p7._1;
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{seed: newSeed, singleCircle: randomValue});
+};
+var _user$project$Main$updateSingleCircle = function (model) {
+	var _p8 = model.singleCircleTime;
+	switch (_p8) {
+		case 200:
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{singleCircleTime: 0});
+		case 1:
+			return _user$project$Main$createSingleCircleHelper(
+				_elm_lang$core$Native_Utils.update(
+					model,
+					{singleCircleTime: model.singleCircleTime + 1}));
+		default:
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{singleCircleTime: model.singleCircleTime + 1});
+	}
+};
+var _user$project$Main$initialModel = {
+	droplist: {ctor: '[]'},
+	time: 0,
+	singleCircleTime: 0,
+	seed: _elm_lang$core$Random$initialSeed(0),
+	singleCircle: 0,
+	mPositionX: 0,
+	mPositionY: 0,
+	arrayPosition: 0,
+	points: 0,
+	pointsColor: {ctor: '[]'},
+	isPlaying: false
+};
+var _user$project$Main$checkIfWon = function (model) {
+	return _elm_lang$core$Native_Utils.eq(model.points, 53) ? _user$project$Main$initialModel : model;
+};
 var _user$project$Main$tick = function (model) {
-	return _user$project$Main$updateTime(
-		_user$project$Main$updateDrops(model));
+	return _user$project$Main$checkIfWon(
+		_user$project$Main$deleteExtraPoints(
+			_user$project$Main$deleteDrops(
+				_user$project$Main$updateTime(
+					_user$project$Main$updateDrops(
+						_user$project$Main$updateSingleCircle(model))))));
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p4 = msg;
-		if (_p4.ctor === 'Begin') {
-			return _user$project$Main$createCircle(model);
-		} else {
-			return _user$project$Main$tick(model);
+		var _p9 = msg;
+		switch (_p9.ctor) {
+			case 'Begin':
+				return _user$project$Main$createCircle(
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{isPlaying: true}));
+			case 'Tick':
+				return A2(_user$project$Main$onlyUpdateIf, _user$project$Main$tick, model);
+			case 'InitialSeed':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						seed: _elm_lang$core$Random$initialSeed(_p9._0)
+					});
+			default:
+				var _p10 = _p9._0;
+				return _user$project$Main$checkPosition(
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{mPositionX: _p10.x - 350, mPositionY: (-1 * _p10.y) + 300}));
 		}
 	});
 var _user$project$Main$updateWithCommand = F2(
@@ -11422,15 +12544,47 @@ var _user$project$Main$updateWithCommand = F2(
 			_1: _elm_lang$core$Platform_Cmd$none
 		};
 	});
-var _user$project$Main$initialModel = {
-	droplist: {ctor: '[]'},
-	time: 0,
-	position: 0
+var _user$project$Main$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return {droplist: a, time: b, singleCircleTime: c, seed: d, singleCircle: e, mPositionX: f, mPositionY: g, arrayPosition: h, points: i, pointsColor: j, isPlaying: k};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
 };
-var _user$project$Main$Drop = F4(
-	function (a, b, c, d) {
-		return {x: a, y: b, name: c, dropColor: d};
+var _user$project$Main$Drop = F5(
+	function (a, b, c, d, e) {
+		return {x: a, y: b, name: c, dropColor: d, dropColorIndex: e};
 	});
+var _user$project$Main$PointsC = F3(
+	function (a, b, c) {
+		return {y: a, pColor: b, pointIndex: c};
+	});
+var _user$project$Main$MouseMsg = function (a) {
+	return {ctor: 'MouseMsg', _0: a};
+};
+var _user$project$Main$InitialSeed = function (a) {
+	return {ctor: 'InitialSeed', _0: a};
+};
+var _user$project$Main$generateInitialSeed = A2(
+	_elm_lang$core$Random$generate,
+	_user$project$Main$InitialSeed,
+	A2(_elm_lang$core$Random$int, _elm_lang$core$Random$minInt, _elm_lang$core$Random$maxInt));
 var _user$project$Main$Tick = function (a) {
 	return {ctor: 'Tick', _0: a};
 };
@@ -11438,8 +12592,12 @@ var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
-			_0: _elm_lang$animation_frame$AnimationFrame$diffs(_user$project$Main$Tick),
-			_1: {ctor: '[]'}
+			_0: _elm_lang$mouse$Mouse$clicks(_user$project$Main$MouseMsg),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$animation_frame$AnimationFrame$diffs(_user$project$Main$Tick),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _user$project$Main$Begin = {ctor: 'Begin'};
@@ -11449,28 +12607,39 @@ var _user$project$Main$view = function (model) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$button,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Begin),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Begin'),
-					_1: {ctor: '[]'}
-				}),
+			_0: _user$project$Main$drawCanvas(model),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$drawCanvas(model),
-				_1: {ctor: '[]'}
+				_0: A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Begin),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Begin'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(' Rules: Click on the circle that matches the text in the upper right corner.'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{
-		init: {ctor: '_Tuple2', _0: _user$project$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none},
+		init: {ctor: '_Tuple2', _0: _user$project$Main$initialModel, _1: _user$project$Main$generateInitialSeed},
 		view: _user$project$Main$view,
 		subscriptions: _user$project$Main$subscriptions,
 		update: _user$project$Main$updateWithCommand

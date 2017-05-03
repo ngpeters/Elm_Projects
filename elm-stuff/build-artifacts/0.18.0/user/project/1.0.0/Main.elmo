@@ -1,3 +1,20 @@
+var _user$project$Main$winBox = _evancz$elm_graphics$Collage$group(
+	{
+		ctor: '::',
+		_0: A2(
+			_evancz$elm_graphics$Collage$filled,
+			_elm_lang$core$Color$yellow,
+			A2(_evancz$elm_graphics$Collage$rect, 300, 100)),
+		_1: {
+			ctor: '::',
+			_0: _evancz$elm_graphics$Collage$text(
+				A2(
+					_evancz$elm_graphics$Text$height,
+					40,
+					_evancz$elm_graphics$Text$fromString('You Win'))),
+			_1: {ctor: '[]'}
+		}
+	});
 var _user$project$Main$backDropBox = function (color) {
 	return _evancz$elm_graphics$Collage$group(
 		{

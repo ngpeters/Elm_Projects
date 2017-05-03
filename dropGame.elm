@@ -197,7 +197,7 @@ checkIfWon model =
         initialModel
     else
         model
-        
+
 updateTime model =
     case model.time of
         200 -> addCircles { model | time = 0 }
@@ -225,13 +225,13 @@ addUpPoints pointsCount yOffset model =
 
 drawCanvas : Model -> Html Msg
 drawCanvas model =
-  List.concat [ [ backDropBox blue
+    List.concat [ [ backDropBox blue
                 , drawPointsBox
                 , drawRect model ] 
                 , (List.map drawCircle model.droplist)
                 , (List.map drawSinglePoint model.pointsColor) ]
-    |> collage 700 600
-    |> toHtml
+        |> collage 700 600
+        |> toHtml
 
 drawPointsBox =
     group [ rect 30 530
@@ -265,8 +265,13 @@ backDropBox color =
     group [ square 600
             |> filled color]
 
---winBox =
-  --  group [ rect 300 100 ]
+winBox =
+    group [ rect 300 100 
+            |> filled yellow
+          , "You Win"
+            |> fromString
+            |> Text.height 40
+            |> Collage.text ]
 
 view : Model -> Html Msg
 view model =
