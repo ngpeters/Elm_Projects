@@ -36,7 +36,7 @@ var _user$project$Main$drawCircle = function (model) {
 				_0: A2(
 					_evancz$elm_graphics$Collage$filled,
 					model.dropColor,
-					_evancz$elm_graphics$Collage$circle(30)),
+					_evancz$elm_graphics$Collage$circle(35)),
 				_1: {
 					ctor: '::',
 					_0: _evancz$elm_graphics$Collage$text(
@@ -75,6 +75,11 @@ var _user$project$Main$drawPointsBox = A2(
 				A2(_evancz$elm_graphics$Collage$rect, 30, 530)),
 			_1: {ctor: '[]'}
 		}));
+var _user$project$Main$checkIfWon = function (model) {
+	return _elm_lang$core$Native_Utils.eq(model.points, 53) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{youWon: true, isPlaying: false}) : model;
+};
 var _user$project$Main$deleteExtraPoints = function (model) {
 	return _elm_lang$core$Native_Utils.update(
 		model,
@@ -113,10 +118,10 @@ var _user$project$Main$deletClickedDrops = F2(
 		return !((_elm_lang$core$Native_Utils.cmp(
 			_elm_lang$core$Basics$abs(
 				_elm_lang$core$Basics$toFloat(model.mPositionX) - drop.x),
-			30) < 0) && ((_elm_lang$core$Native_Utils.cmp(
+			35) < 0) && ((_elm_lang$core$Native_Utils.cmp(
 			_elm_lang$core$Basics$abs(
 				_elm_lang$core$Basics$toFloat(model.mPositionY) - drop.y),
-			30) < 0) && A2(_user$project$Main$isRightColor, model.singleCircle, drop)));
+			35) < 0) && A2(_user$project$Main$isRightColor, model.singleCircle, drop)));
 	});
 var _user$project$Main$onlyUpdateIf = F2(
 	function (tick, model) {
@@ -275,7 +280,27 @@ var _user$project$Main$colors = _elm_lang$core$Array$fromList(
 								_elm_lang$core$Basics$degrees(285),
 								0.57,
 								0.5),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$core$Color$yellow,
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$core$Color$white,
+									_1: {
+										ctor: '::',
+										_0: A3(
+											_elm_lang$core$Color$hsl,
+											_elm_lang$core$Basics$degrees(0),
+											0,
+											0.5),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$core$Color$brown,
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -299,17 +324,33 @@ var _user$project$Main$names2 = _elm_lang$core$Array$fromList(
 			_0: 'みどり',
 			_1: {
 				ctor: '::',
-				_0: 'おれんじ',
+				_0: 'だいだいいろ',
 				_1: {
 					ctor: '::',
 					_0: 'あか',
 					_1: {
 						ctor: '::',
-						_0: 'ぴんく',
+						_0: 'ももいろ',
 						_1: {
 							ctor: '::',
 							_0: 'むらさき',
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: 'きいろ',
+								_1: {
+									ctor: '::',
+									_0: 'しろ',
+									_1: {
+										ctor: '::',
+										_0: 'はいいろ',
+										_1: {
+											ctor: '::',
+											_0: 'ちゃいろ',
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -321,64 +362,6 @@ var _user$project$Main$getName3 = function (i) {
 		_elm_lang$core$Maybe$withDefault,
 		'',
 		A2(_elm_lang$core$Array$get, i, _user$project$Main$names2));
-};
-var _user$project$Main$createMoreCircles = F3(
-	function (numC, xOffset, model) {
-		createMoreCircles:
-		while (true) {
-			var _p3 = numC;
-			if (_p3 === 0) {
-				return model;
-			} else {
-				var _p4 = A2(
-					_elm_lang$core$Random$step,
-					A2(_elm_lang$core$Random$int, 0, 5),
-					model.seed);
-				var randomValue = _p4._0;
-				var newSeed = _p4._1;
-				var _v7 = numC - 1,
-					_v8 = xOffset + 100,
-					_v9 = _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						seed: newSeed,
-						droplist: {
-							ctor: '::',
-							_0: {
-								x: xOffset,
-								y: 350.0,
-								name: _user$project$Main$getName3(randomValue),
-								dropColor: _user$project$Main$getColor(randomValue),
-								dropColorIndex: randomValue
-							},
-							_1: model.droplist
-						}
-					});
-				numC = _v7;
-				xOffset = _v8;
-				model = _v9;
-				continue createMoreCircles;
-			}
-		}
-	});
-var _user$project$Main$createCircle = function (model) {
-	return A3(_user$project$Main$createMoreCircles, 5, -200.0, model);
-};
-var _user$project$Main$addCircles = function (model) {
-	return A3(_user$project$Main$createMoreCircles, 5, -200.0, model);
-};
-var _user$project$Main$updateTime = function (model) {
-	var _p5 = model.time;
-	if (_p5 === 100) {
-		return _user$project$Main$addCircles(
-			_elm_lang$core$Native_Utils.update(
-				model,
-				{time: 0}));
-	} else {
-		return _elm_lang$core$Native_Utils.update(
-			model,
-			{time: model.time + 1});
-	}
 };
 var _user$project$Main$names = _elm_lang$core$Array$fromList(
 	{
@@ -399,7 +382,23 @@ var _user$project$Main$names = _elm_lang$core$Array$fromList(
 						_1: {
 							ctor: '::',
 							_0: 'purple',
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: 'yello',
+								_1: {
+									ctor: '::',
+									_0: 'white',
+									_1: {
+										ctor: '::',
+										_0: 'gray',
+										_1: {
+											ctor: '::',
+											_0: 'brown',
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -407,9 +406,9 @@ var _user$project$Main$names = _elm_lang$core$Array$fromList(
 		}
 	});
 var _user$project$Main$getName = function (position) {
-	var _p6 = A2(_elm_lang$core$Array$get, position, _user$project$Main$names);
-	if (_p6.ctor === 'Just') {
-		return _p6._0;
+	var _p3 = A2(_elm_lang$core$Array$get, position, _user$project$Main$names);
+	if (_p3.ctor === 'Just') {
+		return _p3._0;
 	} else {
 		return 'No';
 	}
@@ -429,23 +428,100 @@ var _user$project$Main$names1 = _elm_lang$core$Array$fromList(
 			_0: '緑',
 			_1: {
 				ctor: '::',
-				_0: 'オレンジ',
+				_0: '橙色',
 				_1: {
 					ctor: '::',
 					_0: '赤',
 					_1: {
 						ctor: '::',
-						_0: 'ピーンク',
+						_0: '桃色',
 						_1: {
 							ctor: '::',
 							_0: '紫',
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: '黄色',
+								_1: {
+									ctor: '::',
+									_0: '白',
+									_1: {
+										ctor: '::',
+										_0: '灰色',
+										_1: {
+											ctor: '::',
+											_0: '茶色',
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
 			}
 		}
 	});
+var _user$project$Main$createMoreCircles = F3(
+	function (numC, xOffset, model) {
+		createMoreCircles:
+		while (true) {
+			var _p4 = numC;
+			if (_p4 === 0) {
+				return model;
+			} else {
+				var _p5 = A2(
+					_elm_lang$core$Random$step,
+					A2(
+						_elm_lang$core$Random$int,
+						0,
+						_elm_lang$core$Array$length(_user$project$Main$names1) - 1),
+					model.seed);
+				var randomValue = _p5._0;
+				var newSeed = _p5._1;
+				var _v8 = numC - 1,
+					_v9 = xOffset + 100,
+					_v10 = _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						seed: newSeed,
+						droplist: {
+							ctor: '::',
+							_0: {
+								x: xOffset,
+								y: 350.0,
+								name: _user$project$Main$getName3(randomValue),
+								dropColor: _user$project$Main$getColor(randomValue),
+								dropColorIndex: randomValue
+							},
+							_1: model.droplist
+						}
+					});
+				numC = _v8;
+				xOffset = _v9;
+				model = _v10;
+				continue createMoreCircles;
+			}
+		}
+	});
+var _user$project$Main$createCircle = function (model) {
+	return A3(_user$project$Main$createMoreCircles, 5, -200.0, model);
+};
+var _user$project$Main$addCircles = function (model) {
+	return A3(_user$project$Main$createMoreCircles, 5, -200.0, model);
+};
+var _user$project$Main$updateTime = function (model) {
+	var _p6 = model.time;
+	if (_p6 === 100) {
+		return _user$project$Main$addCircles(
+			_elm_lang$core$Native_Utils.update(
+				model,
+				{time: 0}));
+	} else {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{time: model.time + 1});
+	}
+};
 var _user$project$Main$getName2 = function (i) {
 	return A2(
 		_elm_lang$core$Maybe$withDefault,
@@ -506,7 +582,15 @@ var _user$project$Main$drawCanvas = function (model) {
 						_1: {
 							ctor: '::',
 							_0: A2(_elm_lang$core$List$map, _user$project$Main$drawSinglePoint, model.pointsColor),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: model.youWon ? {
+									ctor: '::',
+									_0: _user$project$Main$winBox,
+									_1: {ctor: '[]'}
+								} : {ctor: '[]'},
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				})));
@@ -543,6 +627,14 @@ var _user$project$Main$updateSingleCircle = function (model) {
 				{singleCircleTime: model.singleCircleTime + 1});
 	}
 };
+var _user$project$Main$tick = function (model) {
+	return _user$project$Main$checkIfWon(
+		_user$project$Main$deleteExtraPoints(
+			_user$project$Main$deleteDrops(
+				_user$project$Main$updateTime(
+					_user$project$Main$updateDrops(
+						_user$project$Main$updateSingleCircle(model))))));
+};
 var _user$project$Main$initialModel = {
 	droplist: {ctor: '[]'},
 	time: 0,
@@ -554,18 +646,8 @@ var _user$project$Main$initialModel = {
 	arrayPosition: 0,
 	points: 0,
 	pointsColor: {ctor: '[]'},
-	isPlaying: false
-};
-var _user$project$Main$checkIfWon = function (model) {
-	return _elm_lang$core$Native_Utils.eq(model.points, 53) ? _user$project$Main$initialModel : model;
-};
-var _user$project$Main$tick = function (model) {
-	return _user$project$Main$checkIfWon(
-		_user$project$Main$deleteExtraPoints(
-			_user$project$Main$deleteDrops(
-				_user$project$Main$updateTime(
-					_user$project$Main$updateDrops(
-						_user$project$Main$updateSingleCircle(model))))));
+	isPlaying: false,
+	youWon: false
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
@@ -574,7 +656,7 @@ var _user$project$Main$update = F2(
 			case 'Begin':
 				return _user$project$Main$createCircle(
 					_elm_lang$core$Native_Utils.update(
-						model,
+						_user$project$Main$initialModel,
 						{isPlaying: true}));
 			case 'Tick':
 				return A2(_user$project$Main$onlyUpdateIf, _user$project$Main$tick, model);
@@ -611,7 +693,9 @@ var _user$project$Main$Model = function (a) {
 								return function (i) {
 									return function (j) {
 										return function (k) {
-											return {droplist: a, time: b, singleCircleTime: c, seed: d, singleCircle: e, mPositionX: f, mPositionY: g, arrayPosition: h, points: i, pointsColor: j, isPlaying: k};
+											return function (l) {
+												return {droplist: a, time: b, singleCircleTime: c, seed: d, singleCircle: e, mPositionX: f, mPositionY: g, arrayPosition: h, points: i, pointsColor: j, isPlaying: k, youWon: l};
+											};
 										};
 									};
 								};

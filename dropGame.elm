@@ -34,7 +34,8 @@ type alias Model = { droplist : List Drop
                     , arrayPosition : Int 
                     , points : Int
                     , pointsColor : List PointsC 
-                    , isPlaying : Bool }
+                    , isPlaying : Bool 
+                    , youWon : Bool }
 
 initialModel = { droplist = []
                , time = 0
@@ -46,18 +47,23 @@ initialModel = { droplist = []
                , arrayPosition = 0
                , points = 0 
                , pointsColor = [] 
-               , isPlaying = False }
+               , isPlaying = False 
+               , youWon = False }
 
-names1 = Array.fromList ["青", "緑", "オレンジ", "赤", "ピーンク", "紫"]
-names = Array.fromList ["blue", "green", "orange", "red", "pink", "purple"]
-names2 = Array.fromList ["あお", "みどり", "おれんじ", "あか", "ぴんく", "むらさき"]
+names1 = Array.fromList ["青", "緑", "橙色", "赤", "桃色", "紫", "黄色", "白", "灰色", "茶色"]
+names = Array.fromList ["blue", "green", "orange", "red", "pink", "purple", "yello", "white", "gray", "brown"]
+names2 = Array.fromList ["あお", "みどり", "だいだいいろ", "あか", "ももいろ", "むらさき", "きいろ", "しろ", "はいいろ", "ちゃいろ"]
 
 colors = Array.fromList [ (hsl (degrees 190) 0.77 0.5)
                         , (hsl (degrees 121) 0.74 0.5)
                         , (hsl (degrees 41) 0.90 0.5)
                         , (hsl (degrees 16) 0.82 0.5)
                         , (hsl (degrees 337) 0.88 0.77)
-                        , (hsl (degrees 285) 0.57 0.5)]
+                        , (hsl (degrees 285) 0.57 0.5)
+                        , yellow
+                        , white
+                        , (hsl (degrees 0) 0 0.5)
+                        , brown]
 
 pointColors = Array.fromList [ (hsl (degrees 171) 0.86 0.42)
                             , (hsl (degrees 157) 0.86 0.47)
@@ -92,7 +98,7 @@ updateWithCommand msg model =
 update : Msg -> Model -> Model
 update msg model = 
   case msg of
-    Begin -> createCircle { model | isPlaying = True }
+    Begin -> createCircle { initialModel | isPlaying = True }
     Tick _ -> onlyUpdateIf tick model
     InitialSeed val -> { model | seed = Random.initialSeed val }
     MouseMsg position ->  checkPosition { model | mPositionX = (position.x - 350)
@@ -112,8 +118,8 @@ checkPosition model =
                                         model.points + 1 }
 
 deletClickedDrops model drop =
-    not ( ( abs ((toFloat model.mPositionX) - drop.x) < 30 ) &&
-          ( abs ((toFloat model.mPositionY) - drop.y) < 30 ) &&
+    not ( ( abs ((toFloat model.mPositionX) - drop.x) < 35 ) &&
+          ( abs ((toFloat model.mPositionY) - drop.y) < 35 ) &&
           ( isRightColor model.singleCircle drop ) )
 
 isRightColor singleDrop clickedDrop =
@@ -125,7 +131,7 @@ createCircle model =
 createMoreCircles numC xOffset model =
     case numC of 
         0 -> model
-        _ -> let (randomValue, newSeed) = Random.step (Random.int 0 5) model.seed in     
+        _ -> let (randomValue, newSeed) = Random.step (Random.int 0 (Array.length names1 - 1)) model.seed in     
                 createMoreCircles 
                     (numC - 1 ) 
                     (xOffset + 100)  
@@ -156,6 +162,7 @@ getColor i =
     case Array.get i colors of
         Just s -> s
         _ -> red
+
 tick : Model -> Model
 tick model =
     model
@@ -194,7 +201,8 @@ deleteExtraPoints model =
 
 checkIfWon model = 
     if model.points == 53 then
-        initialModel
+        { model | youWon = True
+                , isPlaying = False }
     else
         model
 
@@ -229,7 +237,11 @@ drawCanvas model =
                 , drawPointsBox
                 , drawRect model ] 
                 , (List.map drawCircle model.droplist)
-                , (List.map drawSinglePoint model.pointsColor) ]
+                , (List.map drawSinglePoint model.pointsColor)
+                , if model.youWon then
+                    [ winBox ]
+                else 
+                    [] ]
         |> collage 700 600
         |> toHtml
 
@@ -244,11 +256,11 @@ drawSinglePoint pointColor =
                 |> move (310, pointColor.y )
 
 drawCircle model =
-    group [ circle 30
+    group [ circle 35
             |> filled model.dropColor
           , model.name
             |> fromString
-            |> Collage.text]
+            |> Collage.text ]
             |> move (model.x, model.y)
 
 drawRect model =
