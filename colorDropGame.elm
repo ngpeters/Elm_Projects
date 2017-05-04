@@ -282,7 +282,7 @@ backDropBox color =
 winBox =
     group [ rect 300 100 
             |> filled yellow
-          , "You Win"
+          , "You Won"
             |> fromString
             |> Text.height 40
             |> Collage.text ]

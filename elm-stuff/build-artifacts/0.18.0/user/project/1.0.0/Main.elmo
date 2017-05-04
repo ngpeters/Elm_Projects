@@ -11,7 +11,7 @@ var _user$project$Main$winBox = _evancz$elm_graphics$Collage$group(
 				A2(
 					_evancz$elm_graphics$Text$height,
 					40,
-					_evancz$elm_graphics$Text$fromString('You Win'))),
+					_evancz$elm_graphics$Text$fromString('You Won'))),
 			_1: {ctor: '[]'}
 		}
 	});
