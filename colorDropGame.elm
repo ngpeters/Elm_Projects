@@ -70,7 +70,8 @@ pointColors = Array.fromList [ (hsl (degrees 171) 0.86 0.42)
                             , (hsl (degrees 131) 0.43 0.47)
                             , (hsl (degrees 195) 0.70 0.51)
                             , (hsl (degrees 208) 0.68 0.51)
-                            , (hsl (degrees 252) 0.39 0.51)]
+                            --, (hsl (degrees 252) 0.39 0.51)
+                            , (hsl (degrees 278) 0.55 0.66)]
 
 type alias Drop = { x : Float
                   , y : Float 
