@@ -202,7 +202,8 @@ deleteExtraPoints model =
 checkIfWon model = 
     if model.points == 53 then
         { model | youWon = True
-                , isPlaying = False }
+                , isPlaying = False
+                , droplist = [] }
     else
         model
 

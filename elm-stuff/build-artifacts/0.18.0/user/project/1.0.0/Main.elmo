@@ -78,7 +78,11 @@ var _user$project$Main$drawPointsBox = A2(
 var _user$project$Main$checkIfWon = function (model) {
 	return _elm_lang$core$Native_Utils.eq(model.points, 53) ? _elm_lang$core$Native_Utils.update(
 		model,
-		{youWon: true, isPlaying: false}) : model;
+		{
+			youWon: true,
+			isPlaying: false,
+			droplist: {ctor: '[]'}
+		}) : model;
 };
 var _user$project$Main$deleteExtraPoints = function (model) {
 	return _elm_lang$core$Native_Utils.update(
